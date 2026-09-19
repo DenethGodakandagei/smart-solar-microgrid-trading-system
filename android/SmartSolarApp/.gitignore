@@ -1,0 +1,38 @@
+# Smart Solar Microgrid Trading System
+# Git Ignore Configuration
+#
+# Member 2 - Native Android Prosumer Application
+# Excludes build artifacts, IDE files, and sensitive local configuration.
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.properties
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+*.ipr
+*.iws
+.navigation/
+captures/
+
+# Local configuration
+local.properties
+*.jks
+*.keystore
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Google Maps API key (stored in local.properties)
+secrets.properties
