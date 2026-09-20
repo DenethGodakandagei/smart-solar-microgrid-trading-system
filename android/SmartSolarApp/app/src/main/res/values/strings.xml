@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Solar Microgrid Trading System
+    String Resources
+
+    Member 2 - Native Android Prosumer Application
+    All user-facing strings organized by feature module.
+-->
+<resources>
+
+    <!-- ============================================================= -->
+    <!-- App Info                                                       -->
+    <!-- ============================================================= -->
+    <string name="app_name">SmartSolar</string>
+    <string name="app_tagline">Solar Energy Trading Made Simple</string>
+
+    <!-- ============================================================= -->
+    <!-- Common / Shared                                               -->
+    <!-- ============================================================= -->
+    <string name="action_submit">Submit</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_update">Update</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_back">Back</string>
+    <string name="action_close">Close</string>
+    <string name="action_search">Search</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_view_all">View All</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
+
+    <string name="label_loading">Loading…</string>
+    <string name="label_no_data">No data available</string>
+    <string name="label_no_results">No results found</string>
+    <string name="label_error">Something went wrong</string>
+    <string name="label_success">Success</string>
+    <string name="label_required">* Required</string>
+    <string name="label_optional">Optional</string>
+
+    <!-- ============================================================= -->
+    <!-- Authentication                                                -->
+    <!-- ============================================================= -->
+    <string name="auth_login_title">Welcome Back</string>
+    <string name="auth_login_subtitle">Sign in to your SmartSolar account</string>
+    <string name="auth_register_title">Create Account</string>
+    <string name="auth_register_subtitle">Register as a solar prosumer</string>
+
+    <string name="hint_nic">National Identity Card (NIC)</string>
+    <string name="hint_email">Email Address</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_full_name">Full Name</string>
+    <string name="hint_phone">Phone Number</string>
+    <string name="hint_address">Address</string>
+
+    <string name="auth_btn_login">Sign In</string>
+    <string name="auth_btn_register">Create Account</string>
+    <string name="auth_link_register">Don\'t have an account? Register</string>
+    <string name="auth_link_login">Already have an account? Sign In</string>
+
+    <string name="auth_error_nic_required">NIC is required</string>
+    <string name="auth_error_nic_invalid">Enter a valid NIC number</string>
+    <string name="auth_error_email_invalid">Enter a valid email address</string>
+    <string name="auth_error_password_required">Password is required</string>
+    <string name="auth_error_password_short">Password must be at least 6 characters</string>
+    <string name="auth_error_password_mismatch">Passwords do not match</string>
+    <string name="auth_error_name_required">Full name is required</string>
+    <string name="auth_error_phone_required">Phone number is required</string>
+    <string name="auth_error_login_failed">Login failed. Please check your credentials.</string>
+    <string name="auth_error_register_failed">Registration failed. Please try again.</string>
+    <string name="auth_success_register">Account created successfully! Please wait for activation.</string>
+
+    <!-- ============================================================= -->
+    <!-- Account / Profile                                             -->
+    <!-- ============================================================= -->
+    <string name="profile_title">My Profile</string>
+    <string name="profile_edit_title">Edit Profile</string>
+    <string name="profile_label_nic">NIC</string>
+    <string name="profile_label_name">Full Name</string>
+    <string name="profile_label_email">Email</string>
+    <string name="profile_label_phone">Phone</string>
+    <string name="profile_label_address">Address</string>
+    <string name="profile_label_status">Account Status</string>
+    <string name="profile_label_member_since">Member Since</string>
+    <string name="profile_btn_edit">Edit Profile</string>
+    <string name="profile_btn_deactivate">Deactivate Account</string>
+    <string name="profile_update_success">Profile updated successfully</string>
+    <string name="profile_update_failed">Failed to update profile</string>
+
+    <string name="deactivate_title">Deactivate Account</string>
+    <string name="deactivate_warning">Are you sure you want to deactivate your account? This action requires a Backoffice officer to reactivate.</string>
+    <string name="deactivate_hint_reason">Reason for deactivation (optional)</string>
+    <string name="deactivate_btn_confirm">Confirm Deactivation</string>
+    <string name="deactivate_success">Your account deactivation request has been submitted.</string>
+    <string name="deactivate_failed">Failed to submit deactivation request.</string>
+
+    <!-- ============================================================= -->
+    <!-- Dashboard                                                     -->
+    <!-- ============================================================= -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="dashboard_greeting">Hello, %1$s</string>
+    <string name="dashboard_pending_count">Pending Reservations</string>
+    <string name="dashboard_approved_count">Approved Bookings</string>
+    <string name="dashboard_quick_actions">Quick Actions</string>
+    <string name="dashboard_recent_bookings">Recent Bookings</string>
+    <string name="dashboard_action_new_booking">New Booking</string>
+    <string name="dashboard_action_my_bookings">My Bookings</string>
+    <string name="dashboard_action_nearby_nodes">Nearby Nodes</string>
+    <string name="dashboard_action_qr_code">My QR Code</string>
+
+    <!-- ============================================================= -->
+    <!-- Bookings                                                      -->
+    <!-- ============================================================= -->
+    <string name="booking_create_title">New Booking</string>
+    <string name="booking_update_title">Update Booking</string>
+    <string name="booking_cancel_title">Cancel Booking</string>
+    <string name="booking_summary_title">Booking Summary</string>
+    <string name="booking_list_title">My Bookings</string>
+    <string name="booking_history_title">Booking History</string>
+    <string name="booking_search_title">Search Bookings</string>
+
+    <string name="booking_label_node">Grid Node</string>
+    <string name="booking_label_date">Date</string>
+    <string name="booking_label_time_slot">Time Slot</string>
+    <string name="booking_label_energy_kwh">Energy (kWh)</string>
+    <string name="booking_label_status">Status</string>
+    <string name="booking_label_booking_id">Booking ID</string>
+    <string name="booking_label_created_at">Created</string>
+    <string name="booking_label_updated_at">Last Updated</string>
+    <string name="booking_label_select_node">Select a Grid Node</string>
+    <string name="booking_label_select_date">Select Date</string>
+    <string name="booking_label_select_time">Select Time Slot</string>
+    <string name="booking_hint_notes">Additional notes (optional)</string>
+
+    <string name="booking_btn_create">Create Booking</string>
+    <string name="booking_btn_update">Update Booking</string>
+    <string name="booking_btn_cancel">Cancel Booking</string>
+    <string name="booking_btn_view_qr">View QR Code</string>
+    <string name="booking_btn_done">Done</string>
+
+    <string name="booking_status_pending">Pending</string>
+    <string name="booking_status_approved">Approved</string>
+    <string name="booking_status_cancelled">Cancelled</string>
+    <string name="booking_status_completed">Completed</string>
+
+    <string name="booking_create_success">Booking created successfully!</string>
+    <string name="booking_update_success">Booking updated successfully!</string>
+    <string name="booking_cancel_success">Booking cancelled successfully!</string>
+    <string name="booking_create_failed">Failed to create booking.</string>
+    <string name="booking_update_failed">Failed to update booking.</string>
+    <string name="booking_cancel_failed">Failed to cancel booking.</string>
+
+    <string name="booking_error_node_required">Please select a grid node</string>
+    <string name="booking_error_date_required">Please select a date</string>
+    <string name="booking_error_time_required">Please select a time slot</string>
+    <string name="booking_error_7day_rule">Bookings must be within the next 7 days</string>
+    <string name="booking_error_12hour_rule">Updates and cancellations require at least 12 hours\' notice</string>
+
+    <string name="booking_cancel_confirm">Are you sure you want to cancel this booking?</string>
+    <string name="booking_empty_list">No bookings found</string>
+    <string name="booking_empty_history">No booking history</string>
+
+    <!-- Search / Filter -->
+    <string name="search_hint">Search bookings…</string>
+    <string name="filter_by_status">Filter by Status</string>
+    <string name="filter_by_date">Filter by Date</string>
+    <string name="filter_by_node">Filter by Node</string>
+    <string name="filter_all">All</string>
+
+    <!-- Tab labels -->
+    <string name="tab_current">Current</string>
+    <string name="tab_pending">Pending</string>
+    <string name="tab_history">History</string>
+
+    <!-- ============================================================= -->
+    <!-- QR Code                                                       -->
+    <!-- ============================================================= -->
+    <string name="qr_generate_title">Transaction QR Code</string>
+    <string name="qr_scan_title">Scan QR Code</string>
+    <string name="qr_instruction">Show this QR code to the grid operator to complete your energy transfer.</string>
+    <string name="qr_scan_instruction">Scan the prosumer\'s transaction QR code to verify and finalize the energy transfer.</string>
+    <string name="qr_error_generate">Failed to generate QR code</string>
+    <string name="qr_error_scan">Failed to scan QR code</string>
+    <string name="qr_error_invalid">Invalid QR code data</string>
+
+    <!-- ============================================================= -->
+    <!-- Map                                                           -->
+    <!-- ============================================================= -->
+    <string name="map_title">Nearby Grid Nodes</string>
+    <string name="map_error_location">Unable to get your location</string>
+    <string name="map_error_permission">Location permission is required to show nearby nodes</string>
+    <string name="map_node_info_capacity">Capacity: %1$s kWh</string>
+    <string name="map_node_info_battery">Battery Slots: %1$d</string>
+    <string name="map_node_info_status">Status: %1$s</string>
+    <string name="map_btn_directions">Get Directions</string>
+
+    <!-- ============================================================= -->
+    <!-- Operator                                                      -->
+    <!-- ============================================================= -->
+    <string name="operator_home_title">Operator Dashboard</string>
+    <string name="operator_scan_qr">Scan Prosumer QR</string>
+    <string name="operator_pending_jobs">Pending Verifications</string>
+    <string name="operator_verify_title">Verify Transaction</string>
+    <string name="operator_btn_verify">Verify &amp; Finalize</string>
+    <string name="operator_btn_reject">Reject</string>
+    <string name="operator_verify_success">Transaction verified and finalized successfully!</string>
+    <string name="operator_verify_failed">Verification failed. Please try again.</string>
+    <string name="operator_label_prosumer_nic">Prosumer NIC</string>
+    <string name="operator_label_booking_details">Booking Details</string>
+    <string name="operator_label_verification_status">Verification Status</string>
+
+    <!-- ============================================================= -->
+    <!-- Network / Error                                               -->
+    <!-- ============================================================= -->
+    <string name="error_no_internet">No internet connection. Please check your network settings.</string>
+    <string name="error_server">Server error. Please try again later.</string>
+    <string name="error_timeout">Request timed out. Please try again.</string>
+    <string name="error_unauthorized">Session expired. Please login again.</string>
+    <string name="error_unknown">An unexpected error occurred.</string>
+
+    <!-- ============================================================= -->
+    <!-- Bottom Navigation                                             -->
+    <!-- ============================================================= -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_bookings">Bookings</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_scan">Scan QR</string>
+
+    <!-- ============================================================= -->
+    <!-- Dialogs / Confirmation                                        -->
+    <!-- ============================================================= -->
+    <string name="dialog_logout_title">Logout</string>
+    <string name="dialog_logout_message">Are you sure you want to logout?</string>
+    <string name="dialog_confirm_title">Confirm Action</string>
+
+    <!-- ============================================================= -->
+    <!-- Content Descriptions (Accessibility)                          -->
+    <!-- ============================================================= -->
+    <string name="cd_app_logo">SmartSolar Logo</string>
+    <string name="cd_profile_image">Profile Image</string>
+    <string name="cd_qr_code">Transaction QR Code</string>
+    <string name="cd_back_button">Go Back</string>
+    <string name="cd_search_icon">Search</string>
+    <string name="cd_filter_icon">Filter</string>
+    <string name="cd_notification_icon">Notifications</string>
+
+</resources>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Solar Microgrid Trading System
+    Android Manifest Configuration
+
+    Member 2 - Native Android Prosumer Application
+    Registers all activities, declares permissions for internet access,
+    camera (QR scanning), and location (Google Maps).
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ============================================================= -->
+    <!-- Permissions                                                    -->
+    <!-- ============================================================= -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Camera feature (not required - allows install on devices without camera) -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <application
+        android:name=".SmartSolarApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SmartSolar"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+
+        <!-- Google Maps API Key (loaded from local.properties via secrets plugin) -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <!-- ========================================================= -->
+        <!-- Authentication Activities                                  -->
+        <!-- ========================================================= -->
+
+        <!-- Login - App entry point / launcher activity -->
+        <activity
+            android:name=".auth.LoginActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Registration - NIC-based prosumer signup -->
+        <activity
+            android:name=".auth.RegisterActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- ========================================================= -->
+        <!-- Account Management Activities                              -->
+        <!-- ========================================================= -->
+
+        <!-- View Profile -->
+        <activity
+            android:name=".account.ProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Edit Profile -->
+        <activity
+            android:name=".account.EditProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Request Account Deactivation -->
+        <activity
+            android:name=".account.DeactivateAccountActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- ========================================================= -->
+        <!-- Dashboard                                                  -->
+        <!-- ========================================================= -->
+
+        <!-- Main Dashboard - Prosumer home screen -->
+        <activity
+            android:name=".dashboard.DashboardActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- ========================================================= -->
+        <!-- Booking / Reservation Activities                           -->
+        <!-- ========================================================= -->
+
+        <!-- Create new energy slot booking -->
+        <activity
+            android:name=".booking.CreateBookingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Update existing booking -->
+        <activity
+            android:name=".booking.UpdateBookingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Cancel booking -->
+        <activity
+            android:name=".booking.CancelBookingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Booking action summary / confirmation -->
+        <activity
+            android:name=".booking.BookingSummaryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Current / pending bookings list -->
+        <activity
+            android:name=".booking.BookingListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Booking history -->
+        <activity
+            android:name=".booking.BookingHistoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Search / filter bookings -->
+        <activity
+            android:name=".booking.BookingSearchActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- ========================================================= -->
+        <!-- QR Code Activities                                         -->
+        <!-- ========================================================= -->
+
+        <!-- Generate transaction QR code (Prosumer) -->
+        <activity
+            android:name=".qr.QrGeneratorActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Scan QR code (Operator) -->
+        <activity
+            android:name=".qr.QrScannerActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- ========================================================= -->
+        <!-- Map Activity                                               -->
+        <!-- ========================================================= -->
+
+        <!-- Nearby microgrid nodes on Google Maps -->
+        <activity
+            android:name=".map.NearbyNodesMapActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- ========================================================= -->
+        <!-- Operator Activities                                        -->
+        <!-- ========================================================= -->
+
+        <!-- Operator home / dashboard -->
+        <activity
+            android:name=".operator.OperatorHomeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Verify transaction after QR scan -->
+        <activity
+            android:name=".operator.VerifyTransactionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+    </application>
+
+</manifest>

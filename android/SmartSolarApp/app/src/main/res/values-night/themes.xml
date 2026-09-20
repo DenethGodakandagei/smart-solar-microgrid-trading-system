@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Solar Microgrid Trading System
+    Dark Theme Configuration
+
+    Member 2 - Native Android Prosumer Application
+    Night mode overrides for solar amber theme.
+-->
+<resources>
+
+    <!-- Dark theme overrides -->
+    <style name="Theme.SmartSolar" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- Primary brand colors (slightly lighter for dark backgrounds) -->
+        <item name="colorPrimary">#FFB74D</item>
+        <item name="colorPrimaryDark">#FF6F00</item>
+        <item name="colorPrimaryVariant">#FFA726</item>
+        <item name="colorOnPrimary">#000000</item>
+
+        <!-- Secondary brand colors -->
+        <item name="colorSecondary">#4DB6AC</item>
+        <item name="colorSecondaryVariant">#00897B</item>
+        <item name="colorOnSecondary">#000000</item>
+
+        <!-- Dark background and surface -->
+        <item name="android:colorBackground">#121212</item>
+        <item name="colorSurface">#1E1E1E</item>
+        <item name="colorOnSurface">#E0E0E0</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">#000000</item>
+        <item name="android:navigationBarColor">#1E1E1E</item>
+
+        <!-- Text -->
+        <item name="android:textColorPrimary">#E0E0E0</item>
+        <item name="android:textColorSecondary">#9E9E9E</item>
+        <item name="android:textColorHint">#757575</item>
+
+        <!-- Ripple -->
+        <item name="colorControlHighlight">#33FFB74D</item>
+    </style>
+
+</resources>

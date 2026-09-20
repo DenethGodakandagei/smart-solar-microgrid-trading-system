@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Solar Microgrid Trading System
+    Light Theme Configuration
+
+    Member 2 - Native Android Prosumer Application
+    Material Design 3 inspired light theme with solar amber primary colors.
+-->
+<resources>
+
+    <!-- Base application theme -->
+    <style name="Theme.SmartSolar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand colors -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+
+        <!-- Secondary brand colors -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+
+        <!-- Background and surface -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:navigationBarColor">@color/nav_background</item>
+
+        <!-- Default text appearance -->
+        <item name="android:textColorPrimary">@color/on_background</item>
+        <item name="android:textColorSecondary">@color/on_surface_secondary</item>
+        <item name="android:textColorHint">@color/hint_text</item>
+
+        <!-- Ripple -->
+        <item name="colorControlHighlight">@color/ripple_color</item>
+    </style>
+
+    <!-- ============================================================= -->
+    <!-- Toolbar Styles                                                -->
+    <!-- ============================================================= -->
+
+    <!-- Toolbar with gradient background -->
+    <style name="Theme.SmartSolar.Toolbar" parent="">
+        <item name="android:background">@drawable/gradient_header</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <!-- Toolbar title text style -->
+    <style name="Theme.SmartSolar.Toolbar.Title" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- ============================================================= -->
+    <!-- Button Styles                                                 -->
+    <!-- ============================================================= -->
+
+    <!-- Primary filled button -->
+    <style name="Widget.SmartSolar.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:background">@drawable/btn_primary</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <!-- Secondary outlined button -->
+    <style name="Widget.SmartSolar.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:background">@drawable/btn_secondary</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <!-- Danger / destructive button -->
+    <style name="Widget.SmartSolar.Button.Danger" parent="Widget.MaterialComponents.Button">
+        <item name="android:background">@drawable/btn_danger</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <!-- ============================================================= -->
+    <!-- Text Input Styles                                             -->
+    <!-- ============================================================= -->
+
+    <!-- Outlined text input -->
+    <style name="Widget.SmartSolar.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/input_background</item>
+        <item name="boxStrokeColor">@color/input_stroke_focused</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="hintTextColor">@color/primary</item>
+    </style>
+
+    <!-- ============================================================= -->
+    <!-- Card Styles                                                   -->
+    <!-- ============================================================= -->
+
+    <!-- Elevated card -->
+    <style name="Widget.SmartSolar.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="contentPadding">16dp</item>
+        <item name="strokeColor">@color/card_stroke</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Dashboard stat card -->
+    <style name="Widget.SmartSolar.Card.Stat" parent="Widget.SmartSolar.Card">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+
+    <!-- ============================================================= -->
+    <!-- Text Styles                                                   -->
+    <!-- ============================================================= -->
+
+    <!-- Page title -->
+    <style name="TextAppearance.SmartSolar.Headline" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textColor">@color/on_background</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">sans-serif-bold</item>
+    </style>
+
+    <!-- Section title -->
+    <style name="TextAppearance.SmartSolar.Title" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">@color/on_background</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Body text -->
+    <style name="TextAppearance.SmartSolar.Body" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+    </style>
+
+    <!-- Caption / helper text -->
+    <style name="TextAppearance.SmartSolar.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/on_surface_secondary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Large stat number -->
+    <style name="TextAppearance.SmartSolar.StatNumber" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:fontFamily">sans-serif-bold</item>
+    </style>
+
+    <!-- ============================================================= -->
+    <!-- Bottom Navigation Style                                       -->
+    <!-- ============================================================= -->
+
+    <style name="Widget.SmartSolar.BottomNav" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="backgroundTint">@color/nav_background</item>
+        <item name="itemIconTint">@color/nav_active</item>
+        <item name="itemTextColor">@color/nav_active</item>
+        <item name="elevation">8dp</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+</resources>

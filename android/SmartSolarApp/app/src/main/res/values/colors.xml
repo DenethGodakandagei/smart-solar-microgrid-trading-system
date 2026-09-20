@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Solar Microgrid Trading System
+    Color Palette
+
+    Member 2 - Native Android Prosumer Application
+    Solar-themed warm amber/orange palette with teal accents for eco-energy vibes.
+-->
+<resources>
+
+    <!-- ============================================================= -->
+    <!-- Primary Colors - Solar Amber/Orange                           -->
+    <!-- ============================================================= -->
+    <color name="primary">#FF6F00</color>
+    <color name="primary_dark">#E65100</color>
+    <color name="primary_light">#FFB74D</color>
+    <color name="primary_variant">#F57C00</color>
+    <color name="on_primary">#FFFFFF</color>
+
+    <!-- ============================================================= -->
+    <!-- Secondary Colors - Eco Teal                                   -->
+    <!-- ============================================================= -->
+    <color name="secondary">#00897B</color>
+    <color name="secondary_dark">#00695C</color>
+    <color name="secondary_light">#4DB6AC</color>
+    <color name="secondary_variant">#00796B</color>
+    <color name="on_secondary">#FFFFFF</color>
+
+    <!-- ============================================================= -->
+    <!-- Background & Surface                                          -->
+    <!-- ============================================================= -->
+    <color name="background">#FAFAFA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F5F5F5</color>
+    <color name="on_background">#212121</color>
+    <color name="on_surface">#212121</color>
+    <color name="on_surface_secondary">#757575</color>
+
+    <!-- ============================================================= -->
+    <!-- Status Colors                                                 -->
+    <!-- ============================================================= -->
+    <color name="status_success">#2E7D32</color>
+    <color name="status_success_light">#E8F5E9</color>
+    <color name="status_warning">#F9A825</color>
+    <color name="status_warning_light">#FFF8E1</color>
+    <color name="status_error">#C62828</color>
+    <color name="status_error_light">#FFEBEE</color>
+    <color name="status_info">#1565C0</color>
+    <color name="status_info_light">#E3F2FD</color>
+    <color name="status_pending">#FF8F00</color>
+    <color name="status_pending_light">#FFF3E0</color>
+
+    <!-- ============================================================= -->
+    <!-- Booking Status Badge Colors                                   -->
+    <!-- ============================================================= -->
+    <color name="badge_approved">#2E7D32</color>
+    <color name="badge_pending">#FF8F00</color>
+    <color name="badge_cancelled">#C62828</color>
+    <color name="badge_completed">#1565C0</color>
+
+    <!-- ============================================================= -->
+    <!-- Gradient Colors                                               -->
+    <!-- ============================================================= -->
+    <color name="gradient_start">#FF6F00</color>
+    <color name="gradient_center">#FF8F00</color>
+    <color name="gradient_end">#FFA726</color>
+
+    <!-- ============================================================= -->
+    <!-- Input & Divider                                               -->
+    <!-- ============================================================= -->
+    <color name="input_background">#F5F5F5</color>
+    <color name="input_stroke">#E0E0E0</color>
+    <color name="input_stroke_focused">#FF6F00</color>
+    <color name="divider">#E0E0E0</color>
+    <color name="hint_text">#9E9E9E</color>
+
+    <!-- ============================================================= -->
+    <!-- Bottom Navigation                                             -->
+    <!-- ============================================================= -->
+    <color name="nav_active">#FF6F00</color>
+    <color name="nav_inactive">#9E9E9E</color>
+    <color name="nav_background">#FFFFFF</color>
+
+    <!-- ============================================================= -->
+    <!-- Misc                                                          -->
+    <!-- ============================================================= -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="overlay">#80000000</color>
+    <color name="ripple_color">#1AFF6F00</color>
+    <color name="shadow_color">#1A000000</color>
+    <color name="card_stroke">#F0F0F0</color>
+
+</resources>

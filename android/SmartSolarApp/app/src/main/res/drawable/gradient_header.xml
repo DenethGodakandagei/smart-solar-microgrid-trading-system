@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Solar Microgrid Trading System
+    Header Gradient Drawable
+
+    Member 2 - Solar amber gradient for toolbars and header sections.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="#E65100"
+        android:centerColor="#FF6F00"
+        android:endColor="#FF8F00"
+        android:angle="135" />
+</shape>

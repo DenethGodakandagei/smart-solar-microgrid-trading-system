@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Solar Microgrid Trading System
+    Primary Button Drawable
+
+    Member 2 - Rounded filled button with solar amber gradient.
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#33FFFFFF">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#FF6F00"
+                android:endColor="#FF8F00"
+                android:angle="0" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+</ripple>
