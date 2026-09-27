@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Solar Microgrid Trading System
+    Nearby Grid Nodes Map Screen Layout
+    Member 2 - Native Android Prosumer Application
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Google Map View fragment -->
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Top Floating Search & Node Filter Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.SmartSolar.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="6dp"
+            app:cardCornerRadius="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/btnMapBack"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/cd_back_button"
+                    android:src="@android:drawable/ic_menu_revert"
+                    app:tint="@color/on_surface" />
+
+                <TextView
+                    android:id="@+id/tvMapTitle"
+                    style="@style/TextAppearance.SmartSolar.Title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/map_title"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/btnRefreshNodes"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/action_refresh"
+                    android:src="@android:drawable/ic_menu_rotate"
+                    app:tint="@color/primary" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <!-- Bottom Selected Node Info Card (Shown when a marker is clicked) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardNodeInfo"
+        style="@style/Widget.SmartSolar.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        app:cardElevation="8dp"
+        app:cardCornerRadius="16dp"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="6dp">
+
+                <TextView
+                    android:id="@+id/tvSelectedNodeName"
+                    style="@style/TextAppearance.SmartSolar.Title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    tools:text="Colombo Central Microgrid Station" />
+
+                <TextView
+                    android:id="@+id/tvSelectedNodeStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/card_background"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:textColor="@color/status_success"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    tools:text="Active" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvSelectedNodeLocation"
+                style="@style/TextAppearance.SmartSolar.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                tools:text="123 Galle Road, Colombo 03" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:id="@+id/tvSelectedNodeCapacity"
+                    style="@style/TextAppearance.SmartSolar.Body"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    tools:text="⚡ 500 kWh" />
+
+                <TextView
+                    android:id="@+id/tvSelectedNodeSlots"
+                    style="@style/TextAppearance.SmartSolar.Body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="🔋 8 Slots Available" />
+            </LinearLayout>
+
+            <!-- Book Slot at this Node Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBookThisNode"
+                style="@style/Widget.SmartSolar.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_height"
+                android:text="Book Energy Slot Here" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Floating My Location Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMyLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="240dp"
+        android:contentDescription="My Location"
+        android:src="@android:drawable/ic_menu_mylocation"
+        app:backgroundTint="@color/white"
+        app:tint="@color/primary" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
