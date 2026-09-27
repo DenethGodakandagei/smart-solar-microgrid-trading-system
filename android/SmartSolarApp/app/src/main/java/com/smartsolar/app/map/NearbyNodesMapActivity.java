@@ -4,15 +4,16 @@
  *
  * Member 2 - Native Android Prosumer Application
  * Google Maps integration displaying nearby active microgrid nodes
- * with interactive markers, capacity details, and direct booking actions.
+ * with interactive markers, search & filter bar, capacity details, and direct booking actions.
  */
 package com.smartsolar.app.map;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -35,7 +36,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.smartsolar.app.R;
 import com.smartsolar.app.SmartSolarApplication;
 import com.smartsolar.app.api.ApiClient;
@@ -56,7 +59,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Interactive map screen plotting microgrid hub locations.
+ * Interactive map screen plotting microgrid hub locations with search and filtering.
  */
 public class NearbyNodesMapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -65,6 +68,8 @@ public class NearbyNodesMapActivity extends AppCompatActivity implements OnMapRe
 
     private ImageButton btnMapBack;
     private ImageButton btnRefreshNodes;
+    private TextInputEditText etSearchMapNodes;
+    private ChipGroup chipGroupMapFilter;
     private FloatingActionButton fabMyLocation;
 
     private MaterialCardView cardNodeInfo;
@@ -76,7 +81,7 @@ public class NearbyNodesMapActivity extends AppCompatActivity implements OnMapRe
     private MaterialButton btnBookThisNode;
 
     private NodeCacheDao nodeCacheDao;
-    private List<MicrogridNode> microgridNodes = new ArrayList<>();
+    private List<MicrogridNode> allNodesList = new ArrayList<>();
     private final Map<Marker, MicrogridNode> markerNodeMap = new HashMap<>();
     private MicrogridNode selectedNode;
 
@@ -99,6 +104,8 @@ public class NearbyNodesMapActivity extends AppCompatActivity implements OnMapRe
     private void initViews() {
         btnMapBack = findViewById(R.id.btnMapBack);
         btnRefreshNodes = findViewById(R.id.btnRefreshNodes);
+        etSearchMapNodes = findViewById(R.id.etSearchMapNodes);
+        chipGroupMapFilter = findViewById(R.id.chipGroupMapFilter);
         fabMyLocation = findViewById(R.id.fabMyLocation);
 
         cardNodeInfo = findViewById(R.id.cardNodeInfo);
@@ -122,6 +129,23 @@ public class NearbyNodesMapActivity extends AppCompatActivity implements OnMapRe
                 startActivity(bookIntent);
             }
         });
+
+        // Search text watcher
+        etSearchMapNodes.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                applyFilter();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Filter chips listener
+        chipGroupMapFilter.setOnCheckedStateChangeListener((group, checkedIds) -> applyFilter());
     }
 
     private void setupMap() {
@@ -189,11 +213,12 @@ public class NearbyNodesMapActivity extends AppCompatActivity implements OnMapRe
     }
 
     private void loadGridNodes() {
-        // Load cached nodes first
+        // Load cached nodes first for instant offline rendering
         if (nodeCacheDao != null) {
             List<MicrogridNode> cached = nodeCacheDao.getAllNodes();
             if (!cached.isEmpty()) {
-                plotNodesOnMap(cached);
+                allNodesList = new ArrayList<>(cached);
+                applyFilter();
             }
         }
 
@@ -205,11 +230,11 @@ public class NearbyNodesMapActivity extends AppCompatActivity implements OnMapRe
                 public void onResponse(@NonNull Call<List<MicrogridNode>> call,
                                        @NonNull Response<List<MicrogridNode>> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        microgridNodes = response.body();
+                        allNodesList = response.body();
                         if (nodeCacheDao != null) {
-                            nodeCacheDao.insertNodes(microgridNodes);
+                            nodeCacheDao.insertNodes(allNodesList);
                         }
-                        plotNodesOnMap(microgridNodes);
+                        applyFilter();
                     }
                 }
 
@@ -218,6 +243,44 @@ public class NearbyNodesMapActivity extends AppCompatActivity implements OnMapRe
                     Toast.makeText(NearbyNodesMapActivity.this, "Loaded nodes from offline cache", Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    private void applyFilter() {
+        if (allNodesList == null || allNodesList.isEmpty()) return;
+
+        String query = etSearchMapNodes.getText() != null ? etSearchMapNodes.getText().toString().trim().toLowerCase() : "";
+        int checkedChipId = chipGroupMapFilter.getCheckedChipId();
+
+        List<MicrogridNode> filtered = new ArrayList<>();
+        for (MicrogridNode node : allNodesList) {
+            // Text search match
+            boolean matchesQuery = query.isEmpty()
+                    || (node.getNodeName() != null && node.getNodeName().toLowerCase().contains(query))
+                    || (node.getLocation() != null && node.getLocation().toLowerCase().contains(query));
+
+            if (!matchesQuery) continue;
+
+            // Chip category filter
+            if (checkedChipId == R.id.chipFilterAvailableSlots) {
+                if (node.getAvailableSlots() <= 0) continue;
+            } else if (checkedChipId == R.id.chipFilterHighCapacity) {
+                if (node.getCapacityKwh() < 200.0) continue;
+            }
+
+            filtered.add(node);
+        }
+
+        plotNodesOnMap(filtered);
+
+        // If exact single match found during typing, move camera there
+        if (filtered.size() == 1 && !query.isEmpty()) {
+            MicrogridNode single = filtered.get(0);
+            if (single.getLatitude() != 0.0 && single.getLongitude() != 0.0 && googleMap != null) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(single.getLatitude(), single.getLongitude()), 15f));
+                showNodeCard(single);
+            }
         }
     }
 
@@ -234,7 +297,9 @@ public class NearbyNodesMapActivity extends AppCompatActivity implements OnMapRe
                         .position(position)
                         .title(node.getNodeName())
                         .snippet("Capacity: " + node.getCapacityKwh() + " kWh • Available Slots: " + node.getAvailableSlots())
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                        .icon(BitmapDescriptorFactory.defaultMarker(
+                                node.getAvailableSlots() > 0 ? BitmapDescriptorFactory.HUE_ORANGE : BitmapDescriptorFactory.HUE_RED
+                        ))
                 );
 
                 if (marker != null) {
@@ -250,6 +315,10 @@ public class NearbyNodesMapActivity extends AppCompatActivity implements OnMapRe
         if (node != null) {
             selectedNode = node;
             showNodeCard(node);
+            if (googleMap != null) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(node.getLatitude(), node.getLongitude()), 14f));
+            }
         }
         return false;
     }

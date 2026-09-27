@@ -11,7 +11,7 @@
 2. Click **Open** (or `File` → `Open...`).
 3. Browse to and select the project directory:
    ```
-   f:\smart-solar-microgrid-trading-system\android\SmartSolarApp
+   android/SmartSolarApp
    ```
 4. Click **OK**.
 
@@ -46,6 +46,14 @@ public static final String BASE_URL = "http://10.0.2.2:5000/api/";
 
 ---
 
+### 5. Build via CLI
+```cmd
+.\gradlew.bat assembleDebug
+```
+Output APK location: `app/build/outputs/apk/debug/app-debug.apk`
+
+---
+
 ## 📱 Features & Architecture
 
 - **Role-Based Authentication**:
@@ -69,6 +77,22 @@ public static final String BASE_URL = "http://10.0.2.2:5000/api/";
   - Operator camera barcode scanner with flashlight (`QrScannerActivity`)
   - Server transaction verification & finalization (`VerifyTransactionActivity`)
 - **Google Maps & Station Hubs**:
-  - Interactive microgrid node map with capacity details & direct booking trigger (`NearbyNodesMapActivity`)
+  - Interactive microgrid node map with capacity details, live search & filter bar, and direct booking trigger (`NearbyNodesMapActivity`)
+- **Operator Console**:
+  - Live operator dashboard with pending counts, station status, QR scan shortcut, and manual verification (`OperatorHomeActivity`)
 - **Offline First**:
   - SQLite database caching (`UserDao`, `BookingCacheDao`, `NodeCacheDao`) with `SharedPreferences` session management.
+
+---
+
+## 🔑 Test Credentials
+
+| Role | NIC | Password | Target Screen |
+|------|-----|----------|---------------|
+| Prosumer | `199012345678` | `Pass@123` | Dashboard |
+| Operator | `198598765432` | `Operator@123` | Operator Home |
+
+---
+
+## 📹 Video Demonstration Link
+- *[Insert Video Demo Link Here]*
