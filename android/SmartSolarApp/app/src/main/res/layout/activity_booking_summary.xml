@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Solar Microgrid Trading System
+    Booking Summary Screen Layout
+    Member 2 - Native Android Prosumer Application
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/screen_padding_horizontal"
+        android:paddingVertical="@dimen/screen_padding_vertical">
+
+        <!-- Status & Confirmation Header Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="20dp"
+            android:paddingBottom="16dp">
+
+            <!-- Circular Status Icon Container -->
+            <FrameLayout
+                android:id="@+id/flStatusIconContainer"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/gradient_header"
+                android:elevation="4dp">
+
+                <TextView
+                    android:id="@+id/tvStatusIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="✓"
+                    android:textColor="@color/white"
+                    android:textSize="36sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <!-- Action / Result Title -->
+            <TextView
+                android:id="@+id/tvSummaryTitle"
+                style="@style/TextAppearance.SmartSolar.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                tools:text="Booking Confirmed!" />
+
+            <!-- Subtitle message -->
+            <TextView
+                android:id="@+id/tvSummarySubtitle"
+                style="@style/TextAppearance.SmartSolar.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                tools:text="Your energy slot reservation has been processed" />
+        </LinearLayout>
+
+        <!-- Summary Details Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.SmartSolar.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardElevation="@dimen/card_elevation">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/card_padding">
+
+                <!-- Header Row: Confirmation ID + Status Badge -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.SmartSolar.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CONFIRMATION ID"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvSummaryBookingId"
+                            style="@style/TextAppearance.SmartSolar.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/primary_dark"
+                            android:textStyle="bold"
+                            tools:text="BK-2026-0926-001" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvSummaryStatusBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_background"
+                        android:paddingHorizontal="@dimen/badge_padding_horizontal"
+                        android:paddingVertical="@dimen/badge_padding_vertical"
+                        android:textColor="@color/status_success"
+                        android:textSize="@dimen/text_caption"
+                        android:textStyle="bold"
+                        tools:text="Pending" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginBottom="12dp"
+                    android:background="@color/divider" />
+
+                <!-- Grid Node -->
+                <TextView
+                    style="@style/TextAppearance.SmartSolar.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/booking_label_node" />
+
+                <TextView
+                    android:id="@+id/tvSummaryNodeName"
+                    style="@style/TextAppearance.SmartSolar.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    tools:text="Colombo North Grid Hub" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginBottom="12dp"
+                    android:background="@color/divider" />
+
+                <!-- Date & Time Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.SmartSolar.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/booking_label_date" />
+
+                        <TextView
+                            android:id="@+id/tvSummaryDate"
+                            style="@style/TextAppearance.SmartSolar.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="28 Sep 2026" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.SmartSolar.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/booking_label_time_slot" />
+
+                        <TextView
+                            android:id="@+id/tvSummaryTimeSlot"
+                            style="@style/TextAppearance.SmartSolar.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="10:00 AM - 12:00 PM" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginBottom="12dp"
+                    android:background="@color/divider" />
+
+                <!-- Energy (kWh) & Prosumer Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.SmartSolar.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/booking_label_energy_kwh" />
+
+                        <TextView
+                            android:id="@+id/tvSummaryEnergyKwh"
+                            style="@style/TextAppearance.SmartSolar.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            tools:text="45.0 kWh" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.SmartSolar.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Prosumer NIC" />
+
+                        <TextView
+                            android:id="@+id/tvSummaryNic"
+                            style="@style/TextAppearance.SmartSolar.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="199123456789" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Informational Instructions Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardInstruction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="@color/status_info_light"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/status_info"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/tvInstructionIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:gravity="center"
+                    android:text="💡"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvInstructionMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Present your transaction QR code to the station operator at the node to complete energy transfer."
+                    android:textColor="@color/status_info"
+                    android:textSize="12sp"
+                    android:lineSpacingMultiplier="1.2" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
+
+            <!-- View QR Code Button (Hidden if cancelled) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewQr"
+                style="@style/Widget.SmartSolar.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_height"
+                android:layout_marginBottom="12dp"
+                android:text="@string/booking_btn_view_qr" />
+
+            <!-- Done / Return to Dashboard Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDone"
+                style="@style/Widget.SmartSolar.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_height"
+                android:text="@string/booking_btn_done" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
