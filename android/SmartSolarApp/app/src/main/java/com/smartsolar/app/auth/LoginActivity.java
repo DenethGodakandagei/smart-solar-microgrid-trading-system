@@ -10,6 +10,7 @@ package com.smartsolar.app.auth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -49,6 +50,8 @@ import retrofit2.Response;
  * - Routes user to role-specific home (Dashboard vs. OperatorHome).
  */
 public class LoginActivity extends AppCompatActivity {
+
+    private static final String TAG = "LOGIN";
 
     public static final String EXTRA_REGISTERED_NIC = "extra_registered_nic";
 
@@ -137,15 +140,10 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Validate password
+        // Validate password (only checks not empty; the server decides if it is correct.
+        // The old "< 6 characters" check blocked valid seeded/test accounts.)
         if (TextUtils.isEmpty(password)) {
             tilPassword.setError(getString(R.string.auth_error_password_required));
-            etPassword.requestFocus();
-            return;
-        }
-
-        if (password.length() < 6) {
-            tilPassword.setError(getString(R.string.auth_error_password_short));
             etPassword.requestFocus();
             return;
         }
@@ -165,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
      * @param identifier NIC or Email.
      * @param password   User password.
      */
-    private void executeLogin(String identifier, String password) {
+    private void executeLogin(final String identifier, final String password) {
         setLoading(true);
 
         LoginRequest request = new LoginRequest();
@@ -184,7 +182,7 @@ public class LoginActivity extends AppCompatActivity {
                 setLoading(false);
 
                 if (response.isSuccessful() && response.body() != null) {
-                    LoginResponse loginResponse = response.body();
+                    final LoginResponse loginResponse = response.body();
 
                     // If NIC was not populated in response, ensure it uses our input
                     if (loginResponse.getNic() == null || loginResponse.getNic().isEmpty()) {
@@ -192,13 +190,26 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     // Save session to SharedPreferences
-                    sessionManager.saveLoginSession(loginResponse);
-
-                    // Persist session to local SQLite database
-                    SmartSolarApplication app = SmartSolarApplication.getInstance();
-                    if (app != null && app.getUserDao() != null) {
-                        app.getUserDao().saveSession(loginResponse);
+                    try {
+                        sessionManager.saveLoginSession(loginResponse);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Saving session to SharedPreferences failed", e);
+                        showSnackbar("Could not save session: " + e.getMessage());
+                        return;
                     }
+
+                    // Persist session to local SQLite OFF the main thread.
+                    // A database failure must never block or crash the login.
+                    new Thread(() -> {
+                        try {
+                            SmartSolarApplication app = SmartSolarApplication.getInstance();
+                            if (app != null && app.getUserDao() != null) {
+                                app.getUserDao().saveSession(loginResponse);
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "SQLite session save failed", e);
+                        }
+                    }).start();
 
                     Toast.makeText(LoginActivity.this,
                             "Welcome back, " + (loginResponse.getFullName() != null
@@ -217,30 +228,30 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
                 setLoading(false);
+                Log.e(TAG, "Login request failed", t);
                 showSnackbar(getString(R.string.auth_error_login_failed) + ": " + t.getMessage());
             }
         });
     }
 
     /**
-     * Parses error response body if available.
+     * Parses error response body if available, and logs the real HTTP error.
      */
     private String parseErrorMessage(Response<?> response) {
         try {
             if (response.errorBody() != null) {
                 String errorJson = response.errorBody().string();
+                Log.e(TAG, "HTTP " + response.code() + ": " + errorJson);
                 ApiError apiError = new Gson().fromJson(errorJson, ApiError.class);
                 if (apiError != null && apiError.getMessage() != null) {
                     return apiError.getMessage();
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.e(TAG, "Could not parse error body", e);
         }
 
-        if (response.code() == 401) {
-            return getString(R.string.auth_error_login_failed);
-        }
-        return getString(R.string.auth_error_login_failed);
+        return getString(R.string.auth_error_login_failed) + " (HTTP " + response.code() + ")";
     }
 
     /**
