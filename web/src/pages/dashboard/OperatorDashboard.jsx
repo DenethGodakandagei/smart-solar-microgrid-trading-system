@@ -5,7 +5,7 @@ import Card from '../../components/common/Card';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorAlert from '../../components/common/ErrorAlert';
 import Button from '../../components/common/Button';
-import { getOperatorDashboard } from '../../api/bookingApi';
+import { getOperatorDashboard } from '../../services/reservationService';
 import {
   HiOutlineCalendarDays,
   HiOutlineClock,

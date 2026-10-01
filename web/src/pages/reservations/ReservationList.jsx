@@ -4,12 +4,12 @@ import StatusBadge from '../../components/common/StatusBadge';
 import SearchBar from '../../components/common/SearchBar';
 import Button from '../../components/common/Button';
 import ErrorAlert from '../../components/common/ErrorAlert';
-import { getBookings } from '../../api/bookingApi';
+import { getBookings } from '../../services/reservationService';
 import { formatDate, formatDateTime } from '../../utils/formatDate';
 import { formatEnergy } from '../../utils/formatEnergy';
 import { HiOutlineArrowPath, HiOutlineCalendarDays } from 'react-icons/hi2';
 
-export default function BookingsPage() {
+export default function ReservationList() {
   const [bookings, setBookings] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);

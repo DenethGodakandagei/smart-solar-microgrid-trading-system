@@ -8,7 +8,7 @@ import {
   getPendingActivations,
   approveActivation,
   rejectActivation,
-} from '../../api/activationApi';
+} from '../../services/activationService';
 import { HiOutlineArrowPath } from 'react-icons/hi2';
 
 export default function PendingActivationsPage() {

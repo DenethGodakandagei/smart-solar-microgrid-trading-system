@@ -4,10 +4,10 @@ import SlotStatusCard from '../../components/operator/SlotStatusCard';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorAlert from '../../components/common/ErrorAlert';
 import Button from '../../components/common/Button';
-import { getNodes, getNodeSlots } from '../../api/nodeApi';
+import { getNodes, getNodeSlots } from '../../services/stationService';
 import { HiOutlineArrowPath } from 'react-icons/hi2';
 
-export default function SlotsPage() {
+export default function SlotList() {
   const [nodes, setNodes] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [slots, setSlots] = useState([]);

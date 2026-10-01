@@ -6,10 +6,10 @@ import SearchBar from '../../components/common/SearchBar';
 import Button from '../../components/common/Button';
 import ErrorAlert from '../../components/common/ErrorAlert';
 import { useNotification } from '../../context/NotificationContext';
-import { getUsers, createUser, updateUser, deactivateUser } from '../../api/userApi';
+import { getUsers, createUser, updateUser, deactivateUser } from '../../services/userService';
 import { HiOutlineUserPlus, HiOutlineArrowPath } from 'react-icons/hi2';
 
-export default function UsersPage() {
+export default function UserList() {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);

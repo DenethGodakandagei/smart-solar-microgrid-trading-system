@@ -12,10 +12,10 @@ import {
   updateProsumer,
   deactivateProsumer,
   reactivateProsumer,
-} from '../../api/prosumerApi';
+} from '../../services/prosumerService';
 import { HiOutlineUserPlus, HiOutlineArrowPath } from 'react-icons/hi2';
 
-export default function ProsumersPage() {
+export default function ProsumerList() {
   const [prosumers, setProsumers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);

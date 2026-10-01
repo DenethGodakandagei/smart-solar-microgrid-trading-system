@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 /**
  * useFetch — generic data-fetching hook
  *
- * @param {Function} apiFn - Async API function to call (e.g., userApi.getUsers)
+ * @param {Function} apiFn - Async API function to call (e.g., userService.getUsers)
  * @param {object} params - Parameters to pass to apiFn. Re-fetches when params change.
  * @param {object} options - { immediate: boolean } — if false, won't fetch on mount
  *

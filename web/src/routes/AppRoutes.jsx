@@ -13,18 +13,18 @@ import OperatorLayout from '../layouts/OperatorLayout';
 import LoginPage from '../pages/auth/LoginPage';
 
 // Backoffice pages
-import BackofficeDashboard from '../pages/backoffice/BackofficeDashboard';
-import UsersPage from '../pages/backoffice/UsersPage';
-import PendingActivationsPage from '../pages/backoffice/PendingActivationsPage';
-import ProsumersPage from '../pages/backoffice/ProsumersPage';
-import NodesPage from '../pages/backoffice/NodesPage';
-import BookingsPage from '../pages/backoffice/BookingsPage';
+import BackofficeDashboard from '../pages/dashboard/BackofficeDashboard';
+import UserList from '../pages/users/UserList';
+import PendingActivationsPage from '../pages/users/PendingActivationsPage';
+import ProsumerList from '../pages/prosumers/ProsumerList';
+import StationList from '../pages/stations/StationList';
+import ReservationList from '../pages/reservations/ReservationList';
 
 // Operator pages
-import OperatorDashboard from '../pages/operator/OperatorDashboard';
-import OperatorBookingsPage from '../pages/operator/OperatorBookingsPage';
-import SlotsPage from '../pages/operator/SlotsPage';
-import HistoryPage from '../pages/operator/HistoryPage';
+import OperatorDashboard from '../pages/dashboard/OperatorDashboard';
+import OperatorReservationList from '../pages/reservations/OperatorReservationList';
+import SlotList from '../pages/slots/SlotList';
+import HistoryPage from '../pages/reservations/HistoryPage';
 
 // Shared pages
 import NotFoundPage from '../pages/shared/NotFoundPage';
@@ -52,11 +52,11 @@ export default function AppRoutes() {
           <Route element={<BackofficeLayout />}>
             <Route path="/backoffice" element={<Navigate to="/backoffice/dashboard" replace />} />
             <Route path="/backoffice/dashboard" element={<BackofficeDashboard />} />
-            <Route path="/backoffice/users" element={<UsersPage />} />
+            <Route path="/backoffice/users" element={<UserList />} />
             <Route path="/backoffice/pending-activations" element={<PendingActivationsPage />} />
-            <Route path="/backoffice/prosumers" element={<ProsumersPage />} />
-            <Route path="/backoffice/nodes" element={<NodesPage />} />
-            <Route path="/backoffice/bookings" element={<BookingsPage />} />
+            <Route path="/backoffice/prosumers" element={<ProsumerList />} />
+            <Route path="/backoffice/nodes" element={<StationList />} />
+            <Route path="/backoffice/bookings" element={<ReservationList />} />
           </Route>
         </Route>
       </Route>
@@ -67,8 +67,8 @@ export default function AppRoutes() {
           <Route element={<OperatorLayout />}>
             <Route path="/operator" element={<Navigate to="/operator/dashboard" replace />} />
             <Route path="/operator/dashboard" element={<OperatorDashboard />} />
-            <Route path="/operator/bookings" element={<OperatorBookingsPage />} />
-            <Route path="/operator/slots" element={<SlotsPage />} />
+            <Route path="/operator/bookings" element={<OperatorReservationList />} />
+            <Route path="/operator/slots" element={<SlotList />} />
             <Route path="/operator/history" element={<HistoryPage />} />
           </Route>
         </Route>

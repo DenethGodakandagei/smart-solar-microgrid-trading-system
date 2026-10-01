@@ -12,11 +12,11 @@ import {
   getBookings,
   updateBooking,
   cancelBooking,
-} from '../../api/bookingApi';
-import { getNodes } from '../../api/nodeApi';
+} from '../../services/reservationService';
+import { getNodes } from '../../services/stationService';
 import { HiOutlineArrowPath } from 'react-icons/hi2';
 
-export default function OperatorBookingsPage() {
+export default function OperatorReservationList() {
   const [bookings, setBookings] = useState([]);
   const [nodes, setNodes] = useState([]);
   const [filters, setFilters] = useState({
