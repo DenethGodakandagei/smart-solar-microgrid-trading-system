@@ -7,9 +7,11 @@ import Button from '../../components/common/Button';
 import ErrorAlert from '../../components/common/ErrorAlert';
 import { useNotification } from '../../context/NotificationContext';
 import { getUsers, createUser, updateUser, deactivateUser } from '../../services/userService';
+import { useNavigate } from 'react-router-dom';
 import { HiOutlineUserPlus, HiOutlineArrowPath } from 'react-icons/hi2';
 
 export default function UserList() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -153,6 +155,7 @@ export default function UserList() {
       <UserTable
         users={users}
         isLoading={isLoading}
+        onView={(user) => navigate(`/backoffice/users/view/${user.id || user._id}`)}
         onEdit={handleOpenEdit}
         onDeactivate={(user) => setDeactivateTarget(user)}
       />

@@ -6,7 +6,7 @@ import Button from '../common/Button';
 import ErrorAlert from '../common/ErrorAlert';
 import { ROLES, STATUS } from '../../utils/constants';
 
-export default function UserForm({ isOpen, onClose, onSave, user = null, isLoading = false }) {
+export default function UserForm({ onCancel, onSave, user = null, isLoading = false }) {
   const isEditing = !!user;
 
   const [formData, setFormData] = useState({
@@ -40,7 +40,7 @@ export default function UserForm({ isOpen, onClose, onSave, user = null, isLoadi
       });
     }
     setError('');
-  }, [user, isOpen]);
+  }, [user, true]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,14 +74,8 @@ export default function UserForm({ isOpen, onClose, onSave, user = null, isLoadi
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={isEditing ? 'Edit User Account' : 'Create New User Account'}
-      subtitle="Configure Backoffice or Grid Operator user credentials"
-      maxWidth="max-w-md"
-    >
-      {error && <ErrorAlert message={error} onClose={() => setError('')} className="mb-4" />}
+    <div className="space-y-4">
+      {error && <ErrorAlert message={error} onCancel={() => setError('')} className="mb-4" />}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
@@ -148,7 +142,7 @@ export default function UserForm({ isOpen, onClose, onSave, user = null, isLoadi
         />
 
         <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-          <Button variant="secondary" onClick={onClose} disabled={isLoading}>
+          <Button variant="secondary" onClick={onCancel} disabled={isLoading}>
             Cancel
           </Button>
           <Button type="submit" variant="primary" isLoading={isLoading}>
@@ -156,6 +150,6 @@ export default function UserForm({ isOpen, onClose, onSave, user = null, isLoadi
           </Button>
         </div>
       </form>
-    </Modal>
+    </div>
   );
 }

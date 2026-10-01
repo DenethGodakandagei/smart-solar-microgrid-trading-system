@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { handleMockRequest } from './mockAdapter';
 
 // Create a configured Axios instance
 const axiosClient = axios.create({
@@ -29,17 +28,11 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    // Check if network error occurred (backend offline or unreachable)
+    // If network error occurred (backend offline or unreachable)
     if (!error.response && error.config) {
-      console.warn(
-        `[SmartSolar Client] Live C# Web API unreachable at ${axiosClient.defaults.baseURL}. Activating mock service fallback for: ${error.config.url}`
+      console.error(
+        `[SmartSolar Client] Network Error: Live C# Web API is unreachable at ${axiosClient.defaults.baseURL}. Make sure the backend server is running.`
       );
-      try {
-        const mockResult = await handleMockRequest(error.config);
-        return mockResult;
-      } catch (mockError) {
-        return Promise.reject(mockError);
-      }
     }
 
     const { status } = error.response;
