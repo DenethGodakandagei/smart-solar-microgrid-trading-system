@@ -35,6 +35,7 @@
     <color name="on_background">#212121</color>
     <color name="on_surface">#212121</color>
     <color name="on_surface_secondary">#757575</color>
+    <color name="on_surface_variant">#616161</color>
 
     <!-- ============================================================= -->
     <!-- Status Colors                                                 -->
