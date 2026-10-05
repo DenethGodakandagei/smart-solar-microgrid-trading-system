@@ -1,10 +1,3 @@
-/*
- * Smart Solar Microgrid Trading System
- * LoginActivity.java
- *
- * Member 2 - Native Android Prosumer Application
- * Launcher activity for user authentication, session creation, and role-based routing.
- */
 package com.smartsolar.app.auth;
 
 import android.content.Intent;
@@ -42,9 +35,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Handles prosumer and operator login.
+ * Handles prosumer and operator login strictly using NIC and Password.
  * - Auto-routes if already authenticated.
- * - Validates input credentials.
+ * - Validates NIC and password inputs.
  * - Sends authentication request to C# Web API.
  * - Stores JWT token in SharedPreferences & SQLite.
  * - Routes user to role-specific home (Dashboard vs. OperatorHome).
@@ -122,26 +115,24 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Validates inputs and initiates authentication API request.
+     * Validates inputs and initiates authentication API request using NIC.
      */
     private void attemptLogin() {
         tilNic.setError(null);
         tilPassword.setError(null);
 
-        String identifier = ValidationUtils.safeTrim(
-                etNic.getText() != null ? etNic.getText().toString() : ""
-        );
+        String nic = ValidationUtils.safeTrim(
+                etNic.getText() != null ? etNic.getText().toString() : "");
         String password = etPassword.getText() != null ? etPassword.getText().toString() : "";
 
-        // Validate NIC or Email
-        if (TextUtils.isEmpty(identifier)) {
+        // Validate NIC
+        if (TextUtils.isEmpty(nic)) {
             tilNic.setError(getString(R.string.auth_error_nic_required));
             etNic.requestFocus();
             return;
         }
 
-        // Validate password (only checks not empty; the server decides if it is correct.
-        // The old "< 6 characters" check blocked valid seeded/test accounts.)
+        // Validate password
         if (TextUtils.isEmpty(password)) {
             tilPassword.setError(getString(R.string.auth_error_password_required));
             etPassword.requestFocus();
@@ -154,39 +145,35 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        executeLogin(identifier, password);
+        executeLogin(nic, password);
     }
 
     /**
      * Sends the login API call via Retrofit.
      *
-     * @param identifier NIC or Email.
-     * @param password   User password.
+     * @param nic      User's NIC.
+     * @param password User password.
      */
-    private void executeLogin(final String identifier, final String password) {
+    private void executeLogin(final String nic, final String password) {
         setLoading(true);
 
         LoginRequest request = new LoginRequest();
-        if (identifier.contains("@")) {
-            request.setEmail(identifier);
-        } else {
-            request.setNic(identifier);
-        }
+        request.setNic(nic);
         request.setPassword(password);
 
         ApiService apiService = ApiClient.getApiService(this);
         apiService.login(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NonNull Call<LoginResponse> call,
-                                   @NonNull Response<LoginResponse> response) {
+                    @NonNull Response<LoginResponse> response) {
                 setLoading(false);
 
                 if (response.isSuccessful() && response.body() != null) {
                     final LoginResponse loginResponse = response.body();
 
-                    // If NIC was not populated in response, ensure it uses our input
+                    // Ensure NIC is set in the session object
                     if (loginResponse.getNic() == null || loginResponse.getNic().isEmpty()) {
-                        loginResponse.setNic(identifier);
+                        loginResponse.setNic(nic);
                     }
 
                     // Save session to SharedPreferences
@@ -199,7 +186,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     // Persist session to local SQLite OFF the main thread.
-                    // A database failure must never block or crash the login.
                     new Thread(() -> {
                         try {
                             SmartSolarApplication app = SmartSolarApplication.getInstance();
@@ -213,7 +199,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     Toast.makeText(LoginActivity.this,
                             "Welcome back, " + (loginResponse.getFullName() != null
-                                    ? loginResponse.getFullName() : loginResponse.getNic()),
+                                    ? loginResponse.getFullName()
+                                    : loginResponse.getNic()),
                             Toast.LENGTH_SHORT).show();
 
                     // Route based on role
@@ -243,8 +230,8 @@ public class LoginActivity extends AppCompatActivity {
                 String errorJson = response.errorBody().string();
                 Log.e(TAG, "HTTP " + response.code() + ": " + errorJson);
                 ApiError apiError = new Gson().fromJson(errorJson, ApiError.class);
-                if (apiError != null && apiError.getMessage() != null) {
-                    return apiError.getMessage();
+                if (apiError != null && apiError.getDisplayMessage() != null) {
+                    return apiError.getDisplayMessage();
                 }
             }
         } catch (Exception e) {
@@ -257,13 +244,13 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Routes the user to the appropriate screen according to role.
      * Prosumer -> DashboardActivity
-     * Operator -> OperatorHomeActivity
+     * Operator / GridOperator -> OperatorHomeActivity
      *
      * @param role User role string.
      */
     private void routeByRole(String role) {
         Intent intent;
-        if (Constants.ROLE_OPERATOR.equalsIgnoreCase(role)) {
+        if (Constants.ROLE_OPERATOR.equalsIgnoreCase(role) || Constants.ROLE_GRID_OPERATOR.equalsIgnoreCase(role)) {
             intent = new Intent(this, OperatorHomeActivity.class);
         } else {
             intent = new Intent(this, DashboardActivity.class);

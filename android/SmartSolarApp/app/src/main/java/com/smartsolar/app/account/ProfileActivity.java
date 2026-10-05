@@ -1,10 +1,3 @@
-/*
- * Smart Solar Microgrid Trading System
- * ProfileActivity.java
- *
- * Member 2 - Native Android Prosumer Application
- * Displays prosumer profile details, account status, and options to edit, deactivate, or logout.
- */
 package com.smartsolar.app.account;
 
 import android.content.Intent;
@@ -42,7 +35,7 @@ import retrofit2.Response;
 /**
  * Prosumer Profile Activity.
  * Displays profile attributes from local SQLite database first (offline-first),
- * then synchronizes with the C# Web API.
+ * then synchronizes with the C# Web API using NIC.
  */
 public class ProfileActivity extends AppCompatActivity {
 
@@ -61,6 +54,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView tvProfilePhone;
     private TextView tvProfileAddress;
     private TextView tvProfileMemberSince;
+    private TextView tvProfileRole;
+    private TextView tvProfileNicDetail;
 
     private MaterialButton btnEditProfile;
     private MaterialButton btnDeactivateAccount;
@@ -114,6 +109,8 @@ public class ProfileActivity extends AppCompatActivity {
         tvProfilePhone = findViewById(R.id.tvProfilePhone);
         tvProfileAddress = findViewById(R.id.tvProfileAddress);
         tvProfileMemberSince = findViewById(R.id.tvProfileMemberSince);
+        tvProfileRole = findViewById(R.id.tvProfileRole);
+        tvProfileNicDetail = findViewById(R.id.tvProfileNicDetail);
 
         btnEditProfile = findViewById(R.id.btnEditProfile);
         btnDeactivateAccount = findViewById(R.id.btnDeactivateAccount);
@@ -133,8 +130,7 @@ public class ProfileActivity extends AppCompatActivity {
                     if (result.getResultCode() == RESULT_OK) {
                         fetchProfileFromApi(false);
                     }
-                }
-        );
+                });
     }
 
     /**
@@ -184,10 +180,14 @@ public class ProfileActivity extends AppCompatActivity {
                 tvAvatarInitials.setText(getInitials(sessionManager.getUserName()));
             }
         }
+        // Populate role and NIC details from session
+        String role = sessionManager.getUserRole();
+        tvProfileRole.setText(role != null && !role.isEmpty() ? role : "-");
+        tvProfileNicDetail.setText(userNic != null && !userNic.isEmpty() ? userNic : "-");
     }
 
     /**
-     * Fetches current profile data from the C# Web API.
+     * Fetches current profile data from the C# Web API using user's NIC.
      *
      * @param isSwipeRefresh true if triggered by pull-to-refresh.
      */
@@ -210,7 +210,7 @@ public class ProfileActivity extends AppCompatActivity {
         apiService.getProfile(userNic).enqueue(new Callback<ProsumerProfile>() {
             @Override
             public void onResponse(@NonNull Call<ProsumerProfile> call,
-                                   @NonNull Response<ProsumerProfile> response) {
+                    @NonNull Response<ProsumerProfile> response) {
                 progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
 
@@ -224,8 +224,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                     sessionManager.updateUserProfile(
                             currentProfile.getFullName(),
-                            currentProfile.getEmail()
-                    );
+                            currentProfile.getEmail());
                 } else if (response.code() == 401) {
                     showSnackbar(getString(R.string.error_unauthorized));
                     redirectToLogin();
@@ -247,13 +246,25 @@ public class ProfileActivity extends AppCompatActivity {
      * Populates UI controls with profile fields.
      */
     private void populateProfileUI(ProsumerProfile profile) {
-        if (profile == null) return;
+        if (profile == null)
+            return;
 
         tvProfileName.setText(profile.getFullName() != null ? profile.getFullName() : "-");
         tvProfileNic.setText(getString(R.string.profile_label_nic) + ": " + profile.getNic());
         tvProfileEmail.setText(profile.getEmail() != null ? profile.getEmail() : "-");
-        tvProfilePhone.setText(profile.getPhone() != null && !profile.getPhone().isEmpty() ? profile.getPhone() : "Not provided");
-        tvProfileAddress.setText(profile.getAddress() != null && !profile.getAddress().isEmpty() ? profile.getAddress() : "Not provided");
+        tvProfilePhone.setText(
+                profile.getPhone() != null && !profile.getPhone().isEmpty() ? profile.getPhone() : "Not provided");
+        tvProfileAddress.setText(profile.getAddress() != null && !profile.getAddress().isEmpty() ? profile.getAddress()
+                : "Not provided");
+
+        // Role from profile API or session fallback
+        String role = profile.getRole() != null && !profile.getRole().isEmpty()
+                ? profile.getRole()
+                : sessionManager.getUserRole();
+        tvProfileRole.setText(role != null && !role.isEmpty() ? role : "-");
+
+        // NIC detail
+        tvProfileNicDetail.setText(profile.getNic() != null && !profile.getNic().isEmpty() ? profile.getNic() : "-");
 
         // Format member since date
         if (profile.getCreatedAt() != null && !profile.getCreatedAt().isEmpty()) {

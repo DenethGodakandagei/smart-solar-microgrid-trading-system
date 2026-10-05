@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Smart Solar Microgrid Trading System
-    Profile Screen Layout
-    Member 2 - Native Android Prosumer Application
--->
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -118,6 +113,50 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:text="@string/profile_title" />
+
+                    <!-- Role Field -->
+                    <TextView
+                        style="@style/TextAppearance.SmartSolar.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profile_label_role" />
+
+                    <TextView
+                        android:id="@+id/tvProfileRole"
+                        style="@style/TextAppearance.SmartSolar.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        tools:text="Prosumer" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/divider_height"
+                        android:layout_marginBottom="12dp"
+                        android:background="@color/divider" />
+
+                    <!-- NIC Field -->
+                    <TextView
+                        style="@style/TextAppearance.SmartSolar.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profile_label_nic" />
+
+                    <TextView
+                        android:id="@+id/tvProfileNicDetail"
+                        style="@style/TextAppearance.SmartSolar.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        tools:text="199123456789" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/divider_height"
+                        android:layout_marginBottom="12dp"
+                        android:background="@color/divider" />
 
                     <!-- Email Field -->
                     <TextView
