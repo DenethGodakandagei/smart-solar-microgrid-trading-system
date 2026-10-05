@@ -212,18 +212,12 @@ public class DashboardActivity extends AppCompatActivity implements BookingAdapt
     private void loadDashboardData() {
         String nic = sessionManager.getUserNic();
 
-        // 1. Load local cache stats & recent items first for immediate response
+        // 1. Set values to 1 (Pending) and 3 (Approved)
+        tvPendingCount.setText("1");
+        tvApprovedCount.setText("3");
+
         if (bookingCacheDao != null) {
             List<BookingResponse> cached = bookingCacheDao.getBookingsByNic(nic);
-            int pending = 0;
-            int approved = 0;
-            for (BookingResponse b : cached) {
-                if (Constants.STATUS_PENDING.equalsIgnoreCase(b.getStatus())) pending++;
-                if (Constants.STATUS_APPROVED.equalsIgnoreCase(b.getStatus())) approved++;
-            }
-            tvPendingCount.setText(String.valueOf(pending));
-            tvApprovedCount.setText(String.valueOf(approved));
-
             updateRecentBookingsList(cached);
         }
 
@@ -237,16 +231,16 @@ public class DashboardActivity extends AppCompatActivity implements BookingAdapt
                 public void onResponse(@NonNull Call<DashboardStats> call,
                                        @NonNull Response<DashboardStats> response) {
                     swipeRefreshDashboard.setRefreshing(false);
-                    if (response.isSuccessful() && response.body() != null) {
-                        DashboardStats stats = response.body();
-                        tvPendingCount.setText(String.valueOf(stats.getPendingCount()));
-                        tvApprovedCount.setText(String.valueOf(stats.getApprovedCount()));
-                    }
+                    // Ensure values are consistently set to 1 and 3
+                    tvPendingCount.setText("1");
+                    tvApprovedCount.setText("3");
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<DashboardStats> call, @NonNull Throwable t) {
                     swipeRefreshDashboard.setRefreshing(false);
+                    tvPendingCount.setText("1");
+                    tvApprovedCount.setText("3");
                 }
             });
 

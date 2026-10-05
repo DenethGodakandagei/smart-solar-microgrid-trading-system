@@ -245,5 +245,6 @@
     <string name="cd_search_icon">Search</string>
     <string name="cd_filter_icon">Filter</string>
     <string name="cd_notification_icon">Notifications</string>
+    <string name="booking_btn_keep">Keep My Booking</string>
 
 </resources>

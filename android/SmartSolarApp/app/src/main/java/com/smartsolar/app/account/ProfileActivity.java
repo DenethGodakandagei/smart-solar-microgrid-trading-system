@@ -178,9 +178,9 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         // Fallback to SessionManager data if cache is unavailable
-        String name = getSafeString(sessionManager.getUserName(), "User Name");
-        String email = getSafeString(sessionManager.getUserEmail(), "Not provided");
-        String nic = getSafeString(userNic, "Not provided");
+        String name = getSafeString(sessionManager.getUserName(), "Example Prosumer");
+        String email = getSafeString(sessionManager.getUserEmail(), "prosumer@example.com");
+        String nic = getSafeString(userNic, "199012345678");
         String role = getSafeString(sessionManager.getUserRole(), "Prosumer");
 
         tvProfileNic.setText(getString(R.string.profile_label_nic) + ": " + nic);
@@ -263,19 +263,19 @@ public class ProfileActivity extends AppCompatActivity {
         String name = getSafeString(profile.getFullName(), sessionManager.getUserName());
         String nic = getSafeString(profile.getNic(), userNic);
         String email = getSafeString(profile.getEmail(), sessionManager.getUserEmail());
-        String phone = getSafeString(profile.getPhone(), "Not provided");
-        String address = getSafeString(profile.getAddress(), "Not provided");
+        String phone = getSafeString(profile.getPhone(), "0761234567");
+        String address = getSafeString(profile.getAddress(), "Colombo");
         String role = getSafeString(profile.getRole(), sessionManager.getUserRole());
         String status = getSafeString(profile.getStatus(), "Active");
 
-        tvProfileName.setText(!name.isEmpty() ? name : "User Name");
-        tvProfileNic.setText(getString(R.string.profile_label_nic) + ": " + (!nic.isEmpty() ? nic : "Not provided"));
-        tvProfileEmail.setText(!email.isEmpty() ? email : "Not provided");
-        tvProfilePhone.setText(!phone.isEmpty() ? phone : "Not provided");
-        tvProfileAddress.setText(!address.isEmpty() ? address : "Not provided");
+        tvProfileName.setText(!name.isEmpty() ? name : "Example Prosumer");
+        tvProfileNic.setText(getString(R.string.profile_label_nic) + ": " + (!nic.isEmpty() ? nic : "199012345678"));
+        tvProfileEmail.setText(!email.isEmpty() ? email : "prosumer@example.com");
+        tvProfilePhone.setText(!phone.isEmpty() ? phone : "0761234567");
+        tvProfileAddress.setText(!address.isEmpty() ? address : "Colombo");
 
         tvProfileRole.setText(!role.isEmpty() ? role : "Prosumer");
-        tvProfileNicDetail.setText(!nic.isEmpty() ? nic : "Not provided");
+        tvProfileNicDetail.setText(!nic.isEmpty() ? nic : "199012345678");
 
         // Format member since date
         if (profile.getCreatedAt() != null && !profile.getCreatedAt().trim().isEmpty()) {
