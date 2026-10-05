@@ -138,25 +138,25 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => {
-                  setUsername('admin@gmail.com');
-                  setPassword('admin123');
+                  setUsername('backoffice@smartsolar.lk');
+                  setPassword('Password123!');
                 }}
                 className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-center transition"
               >
                 Backoffice
-                <span className="block text-[10px] text-slate-500 font-normal">admin@gmail.com</span>
+                <span className="block text-[10px] text-slate-500 font-normal">backoffice@smartsolar.lk</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => {
-                  setUsername('rashi@gmail.com');
-                  setPassword('operator123');
+                  setUsername('operator@smartsolar.lk');
+                  setPassword('Password123!');
                 }}
                 className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-center transition"
               >
                 Grid Operator
-                <span className="block text-[10px] text-slate-500 font-normal">rashi@gmail.com</span>
+                <span className="block text-[10px] text-slate-500 font-normal">operator@smartsolar.lk</span>
               </button>
             </div>
 

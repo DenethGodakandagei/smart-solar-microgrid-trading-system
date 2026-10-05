@@ -5,7 +5,7 @@ import SearchBar from '../../components/common/SearchBar';
 import Pagination from '../../components/common/Pagination';
 import Button from '../../components/common/Button';
 import ErrorAlert from '../../components/common/ErrorAlert';
-import { getBookingHistory } from '../../api/bookingApi';
+import { getBookingHistory } from '../../services/reservationService';
 import { formatDate, formatDateTime } from '../../utils/formatDate';
 import { formatEnergy } from '../../utils/formatEnergy';
 import { HiOutlineArrowPath } from 'react-icons/hi2';

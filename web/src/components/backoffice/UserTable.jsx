@@ -2,9 +2,9 @@ import React from 'react';
 import DataTable from '../common/DataTable';
 import StatusBadge from '../common/StatusBadge';
 import Button from '../common/Button';
-import { HiOutlinePencilSquare, HiOutlineNoSymbol } from 'react-icons/hi2';
+import { HiOutlineEye, HiOutlinePencilSquare, HiOutlineNoSymbol } from 'react-icons/hi2';
 
-export default function UserTable({ users, isLoading, onEdit, onDeactivate }) {
+export default function UserTable({ users, isLoading, onEdit, onDeactivate, onView }) {
   const columns = [
     {
       header: 'User',

@@ -13,10 +13,10 @@ import {
   updateNode,
   updateNodeSchedule,
   deactivateNode,
-} from '../../api/nodeApi';
+} from '../../services/stationService';
 import { HiOutlinePlus, HiOutlineArrowPath } from 'react-icons/hi2';
 
-export default function NodesPage() {
+export default function StationList() {
   const [nodes, setNodes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
