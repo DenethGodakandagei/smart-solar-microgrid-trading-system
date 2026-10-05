@@ -168,37 +168,6 @@ public sealed class SlotsController(ISlotService s) : ControllerBase
 }
 
 // ---------------------------------------------------------------------------
-// Reservations (Prosumer)
-// ---------------------------------------------------------------------------
-[ApiController]
-[Authorize(Roles = Roles.Prosumer)]
-[Route("api/reservations")]
-public sealed class ReservationsController(IReservationService s) : ControllerBase
-{
-    [HttpGet]
-    public async Task<ActionResult<List<EnergyReservation>>> Get([FromQuery] string? state) =>
-        Ok(await s.QueryAsync(Nic(), state));
-
-    [HttpPost]
-    public async Task<ActionResult<EnergyReservation>> Create(ReservationRequest r) =>
-        Ok(await s.CreateAsync(Nic(), r));
-
-    [HttpPut("{id}")]
-    public async Task<ActionResult<EnergyReservation>> Update(string id, ReservationUpdateRequest r) =>
-        Ok(await s.UpdateAsync(id, Nic(), r));
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Cancel(string id)
-    {
-        await s.CancelAsync(id, Nic());
-        return NoContent();
-    }
-
-    private string Nic() =>
-        User.FindFirstValue("nic") ?? throw new InvalidOperationException("Prosumer identity required.");
-}
-
-// ---------------------------------------------------------------------------
 // Operator
 // ---------------------------------------------------------------------------
 [ApiController]

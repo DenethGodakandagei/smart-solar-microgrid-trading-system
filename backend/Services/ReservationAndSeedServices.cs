@@ -10,6 +10,7 @@ namespace SmartSolarMicrogrid.Api.Services;
 public interface IReservationService
 {
     Task<EnergyReservation> CreateAsync(string nic, ReservationRequest r);
+    Task<EnergyReservation> CreateBookingAsync(string nic, BookingRequest r);
     Task<EnergyReservation> UpdateAsync(string id, string nic, ReservationUpdateRequest r);
     Task CancelAsync(string id, string nic);
     Task<List<EnergyReservation>> QueryAsync(string nic, string? state);
@@ -21,6 +22,38 @@ public sealed class ReservationService(MongoContext db) : IReservationService
 {
     private static bool Notice(DateTime start) => start >= DateTime.UtcNow.AddHours(12);
 
+    // NEW: used by BookingsController. Matches what the Android app sends.
+    public async Task<EnergyReservation> CreateBookingAsync(string nic, BookingRequest r)
+    {
+        if (r.EnergyKwh <= 0)
+            throw new InvalidOperationException("Energy amount must be greater than 0.");
+
+        if (string.IsNullOrWhiteSpace(r.NodeId))
+            throw new InvalidOperationException("Node is required.");
+
+        if (string.IsNullOrWhiteSpace(r.SlotTime))
+            throw new InvalidOperationException("Time slot is required.");
+
+        // The app sends the date as UTC (e.g. 2026-10-11T18:30:00Z).
+        // Allow one day of slack so timezone differences don't reject today's bookings.
+        if (r.SlotDate.ToUniversalTime() < DateTime.UtcNow.Date.AddDays(-1))
+            throw new InvalidOperationException("Booking date cannot be in the past.");
+
+        var res = new EnergyReservation
+        {
+            ProsumerNic = nic,                       // always from the token, never from the body
+            EnergyKwh = r.EnergyKwh,
+            NodeId = r.NodeId.Trim(),
+            SlotDate = r.SlotDate.ToUniversalTime(),
+            SlotTime = r.SlotTime.Trim(),
+            Notes = string.IsNullOrWhiteSpace(r.Notes) ? null : r.Notes.Trim()
+        };
+
+        await db.Reservations.InsertOneAsync(res);
+        return res;
+    }
+
+    // Original slot-based booking (still used by ReservationsController)
     public async Task<EnergyReservation> CreateAsync(string nic, ReservationRequest r)
     {
         var slot = await db.Slots
@@ -76,6 +109,16 @@ public sealed class ReservationService(MongoContext db) : IReservationService
     public async Task CancelAsync(string id, string nic)
     {
         var res = await Owned(id, nic);
+
+        // Bookings made through the app have no slot, so just cancel the reservation.
+        if (string.IsNullOrEmpty(res.SlotId))
+        {
+            res.Status = ReservationStatus.Cancelled;
+            res.UpdatedAt = DateTime.UtcNow;
+            await db.Reservations.ReplaceOneAsync(x => x.Id == id, res);
+            return;
+        }
+
         var slot = await db.Slots
             .Find(x => x.Id == res.SlotId)
             .FirstOrDefaultAsync() ?? throw new KeyNotFoundException("Slot not found.");

@@ -102,10 +102,22 @@ public sealed class SlotRequest
     [Range(0, double.MaxValue)] public decimal PricePerKwh { get; set; }
 }
 
+// Slot-based booking (used by ReservationsController / ReservationService.CreateAsync)
 public sealed class ReservationRequest
 {
     [Required] public string SlotId { get; set; } = "";
     [Range(0.01, double.MaxValue)] public decimal EnergyKwh { get; set; }
+}
+
+// Booking sent by the Android app (used by BookingsController)
+public sealed class BookingRequest
+{
+    public decimal EnergyKwh { get; set; }
+    public string NodeId { get; set; } = "";
+    public string? Notes { get; set; }
+    public string? ProsumerNic { get; set; }   // ignored; the NIC comes from the token
+    public DateTime SlotDate { get; set; }
+    public string SlotTime { get; set; } = "";
 }
 
 public sealed class ReservationUpdateRequest

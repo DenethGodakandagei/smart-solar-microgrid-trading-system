@@ -72,4 +72,10 @@ public sealed class EnergyReservation : Entity
     public string QrToken { get; set; } = Guid.NewGuid().ToString("N");
     public DateTime? FinalizedAt { get; set; }
     public string? FinalizedBy { get; set; }
+
+    // Added for bookings made from the Android app
+    public string NodeId { get; set; } = "";
+    public DateTime? SlotDate { get; set; }
+    public string SlotTime { get; set; } = "";
+    public string? Notes { get; set; }
 }
