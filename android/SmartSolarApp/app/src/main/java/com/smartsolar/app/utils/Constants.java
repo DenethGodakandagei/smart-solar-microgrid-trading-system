@@ -27,7 +27,7 @@ public final class Constants {
      * For Android Emulator use 10.0.2.2 to reach localhost.
      * For physical device use the actual server IP address.
      */
-    public static final String BASE_URL = "http://10.0.2.2:5000/api/";
+    public static final String BASE_URL = "http://10.0.2.2:5055/api/";
 
     /** Connection timeout in seconds for API requests. */
     public static final int CONNECT_TIMEOUT = 30;
@@ -51,6 +51,9 @@ public final class Constants {
     /** Key for storing the logged-in user's NIC. */
     public static final String PREF_USER_NIC = "user_nic";
 
+    /** Key for storing the logged-in user's username. */
+    public static final String PREF_USER_USERNAME = "user_username";
+
     /** Key for storing the logged-in user's full name. */
     public static final String PREF_USER_NAME = "user_name";
 
@@ -72,6 +75,7 @@ public final class Constants {
 
     /** Role identifier for grid operator users. */
     public static final String ROLE_OPERATOR = "Operator";
+    public static final String ROLE_GRID_OPERATOR = "GridOperator";
 
     /** Role identifier for backoffice admin users. */
     public static final String ROLE_BACKOFFICE = "Backoffice";

@@ -312,16 +312,31 @@
                 android:id="@+id/btnViewQr"
                 style="@style/Widget.SmartSolar.Button.Primary"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/btn_height"
+                android:layout_height="wrap_content"
+                android:minHeight="52dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
                 android:layout_marginBottom="12dp"
+                android:textAllCaps="false"
+                android:textSize="16sp"
                 android:text="@string/booking_btn_view_qr" />
+
 
             <!-- Done / Return to Dashboard Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDone"
                 style="@style/Widget.SmartSolar.Button.Secondary"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/btn_height"
+                android:layout_height="wrap_content"
+                android:minHeight="52dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:textAllCaps="false"
+                android:textSize="16sp"
                 android:text="@string/booking_btn_done" />
 
         </LinearLayout>

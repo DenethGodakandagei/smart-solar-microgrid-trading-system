@@ -1,11 +1,3 @@
-/*
- * Smart Solar Microgrid Trading System
- * LoginResponse.java
- *
- * Member 2 - Native Android Prosumer Application
- * DTO for receiving authentication response containing JWT token,
- * user role, and basic profile information.
- */
 package com.smartsolar.app.api.models;
 
 import com.google.gson.annotations.SerializedName;
