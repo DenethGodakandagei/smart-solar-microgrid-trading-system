@@ -1,11 +1,3 @@
-/*
- * Smart Solar Microgrid Trading System
- * SessionManager.java
- *
- * Member 2 - Native Android Prosumer Application
- * SharedPreferences-based session manager for persisting authentication token,
- * user identity, role, and login state across app restarts.
- */
 package com.smartsolar.app.auth;
 
 import android.content.Context;
@@ -17,7 +9,7 @@ import com.smartsolar.app.utils.Constants;
 
 /**
  * Manages the user session state using Android SharedPreferences.
- * Stores JWT authentication token, role, NIC, and full name.
+ * Stores JWT authentication token, role, NIC, email, and full name.
  * Provides helper methods for role-based navigation and authentication checks.
  */
 public class SessionManager {
@@ -79,14 +71,14 @@ public class SessionManager {
      * @param response LoginResponse returned from POST /api/auth/login.
      */
     public void saveLoginSession(LoginResponse response) {
-        if (response == null) return;
+        if (response == null)
+            return;
         saveLoginSession(
                 response.getToken(),
                 response.getNic(),
                 response.getFullName(),
                 response.getEmail(),
-                response.getRole()
-        );
+                response.getRole());
     }
 
     /**

@@ -1,11 +1,3 @@
-/*
- * Smart Solar Microgrid Trading System
- * CreateBookingActivity.java
- *
- * Member 2 - Native Android Prosumer Application
- * Handles creating a new energy slot reservation.
- * Enforces the 7-day advance booking window rule and validates node capacity.
- */
 package com.smartsolar.app.booking;
 
 import android.app.DatePickerDialog;
@@ -58,7 +50,8 @@ import retrofit2.Response;
  * Screen where a prosumer creates a new energy slot booking.
  * - Loads active grid nodes from API / local cache.
  * - Restricts date selection to the next 7 days.
- * - Sends POST /api/bookings and navigates to BookingSummaryActivity on success.
+ * - Sends POST /api/bookings and navigates to BookingSummaryActivity on
+ * success.
  */
 public class CreateBookingActivity extends AppCompatActivity {
 
@@ -88,7 +81,7 @@ public class CreateBookingActivity extends AppCompatActivity {
     private Date selectedDate;
     private Calendar calendar = Calendar.getInstance();
 
-    private static final String[] TIME_SLOTS = new String[]{
+    private static final String[] TIME_SLOTS = new String[] {
             "08:00 AM - 10:00 AM",
             "10:00 AM - 12:00 PM",
             "12:00 PM - 02:00 PM",
@@ -142,8 +135,7 @@ public class CreateBookingActivity extends AppCompatActivity {
         ArrayAdapter<String> timeAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_dropdown_item_1line,
-                TIME_SLOTS
-        );
+                TIME_SLOTS);
         actvTimeSlot.setAdapter(timeAdapter);
     }
 
@@ -175,8 +167,7 @@ public class CreateBookingActivity extends AppCompatActivity {
                 },
                 year,
                 month,
-                day
-        );
+                day);
 
         // Business Rule: Enforce 7-day window
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
@@ -192,15 +183,76 @@ public class CreateBookingActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(v -> finish());
     }
 
-    /**
-     * Loads available grid nodes from local SQLite cache first, then refreshes from API.
-     */
+    private List<MicrogridNode> getSampleNodes() {
+        List<MicrogridNode> sampleNodes = new ArrayList<>();
+
+        MicrogridNode node1 = new MicrogridNode();
+        node1.setNodeId("NODE-001");
+        node1.setNodeName("Solar Hub Colombo Central");
+        node1.setLocation("Colombo 03");
+        node1.setLatitude(6.9271);
+        node1.setLongitude(79.8612);
+        node1.setCapacityKwh(150.0);
+        node1.setBatterySlots(10);
+        node1.setAvailableSlots(6);
+        node1.setStatus("ACTIVE");
+        node1.setActive(true);
+        sampleNodes.add(node1);
+
+        MicrogridNode node2 = new MicrogridNode();
+        node2.setNodeId("NODE-002");
+        node2.setNodeName("Kandy Eco Solar Station");
+        node2.setLocation("Kandy City");
+        node2.setLatitude(7.2906);
+        node2.setLongitude(80.6337);
+        node2.setCapacityKwh(200.0);
+        node2.setBatterySlots(12);
+        node2.setAvailableSlots(8);
+        node2.setStatus("ACTIVE");
+        node2.setActive(true);
+        sampleNodes.add(node2);
+
+        MicrogridNode node3 = new MicrogridNode();
+        node3.setNodeId("NODE-003");
+        node3.setNodeName("Galle Fort Microgrid Unit");
+        node3.setLocation("Galle Fort");
+        node3.setLatitude(6.0535);
+        node3.setLongitude(80.2210);
+        node3.setCapacityKwh(120.0);
+        node3.setBatterySlots(8);
+        node3.setAvailableSlots(4);
+        node3.setStatus("ACTIVE");
+        node3.setActive(true);
+        sampleNodes.add(node3);
+
+        MicrogridNode node4 = new MicrogridNode();
+        node4.setNodeId("NODE-004");
+        node4.setNodeName("Negombo Coastal Grid");
+        node4.setLocation("Negombo");
+        node4.setLatitude(7.2088);
+        node4.setLongitude(79.8358);
+        node4.setCapacityKwh(180.0);
+        node4.setBatterySlots(10);
+        node4.setAvailableSlots(7);
+        node4.setStatus("ACTIVE");
+        node4.setActive(true);
+        sampleNodes.add(node4);
+
+        return sampleNodes;
+    }
+
     private void loadNodes() {
+        boolean hasCachedNodes = false;
         if (nodeCacheDao != null) {
             List<MicrogridNode> cachedNodes = nodeCacheDao.getAllNodes();
             if (!cachedNodes.isEmpty()) {
                 populateNodeDropdown(cachedNodes);
+                hasCachedNodes = true;
             }
+        }
+
+        if (!hasCachedNodes) {
+            populateNodeDropdown(getSampleNodes());
         }
 
         if (NetworkUtils.isNetworkAvailable(this)) {
@@ -208,19 +260,23 @@ public class CreateBookingActivity extends AppCompatActivity {
             apiService.getAllNodes().enqueue(new Callback<List<MicrogridNode>>() {
                 @Override
                 public void onResponse(@NonNull Call<List<MicrogridNode>> call,
-                                       @NonNull Response<List<MicrogridNode>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
+                        @NonNull Response<List<MicrogridNode>> response) {
+                    if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                         List<MicrogridNode> nodes = response.body();
                         if (nodeCacheDao != null) {
                             nodeCacheDao.insertNodes(nodes);
                         }
                         populateNodeDropdown(nodes);
+                    } else if (nodeList.isEmpty()) {
+                        populateNodeDropdown(getSampleNodes());
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<List<MicrogridNode>> call, @NonNull Throwable t) {
-                    // Fallback to cached nodes already handled
+                    if (nodeList.isEmpty()) {
+                        populateNodeDropdown(getSampleNodes());
+                    }
                 }
             });
         }
@@ -236,8 +292,7 @@ public class CreateBookingActivity extends AppCompatActivity {
         ArrayAdapter<String> nodeAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_dropdown_item_1line,
-                nodeDisplayNames
-        );
+                nodeDisplayNames);
         actvNode.setAdapter(nodeAdapter);
 
         // Pre-select if EXTRA_NODE_ID passed in intent
@@ -290,11 +345,13 @@ public class CreateBookingActivity extends AppCompatActivity {
         // Validate date selection
         if (selectedDate == null) {
             tilDate.setError(getString(R.string.booking_error_date_required));
-            if (focusView == null) focusView = etDate;
+            if (focusView == null)
+                focusView = etDate;
             cancel = true;
         } else if (!DateTimeUtils.isWithin7DayWindow(selectedDate)) {
             tilDate.setError(getString(R.string.booking_error_7day_rule));
-            if (focusView == null) focusView = etDate;
+            if (focusView == null)
+                focusView = etDate;
             cancel = true;
         }
 
@@ -302,7 +359,8 @@ public class CreateBookingActivity extends AppCompatActivity {
         String timeSlot = actvTimeSlot.getText() != null ? actvTimeSlot.getText().toString().trim() : "";
         if (timeSlot.isEmpty()) {
             tilTimeSlot.setError(getString(R.string.booking_error_time_required));
-            if (focusView == null) focusView = actvTimeSlot;
+            if (focusView == null)
+                focusView = actvTimeSlot;
             cancel = true;
         }
 
@@ -311,23 +369,29 @@ public class CreateBookingActivity extends AppCompatActivity {
         double energyKwh = 0;
         if (!ValidationUtils.isNotEmpty(energyStr)) {
             tilEnergyKwh.setError("Energy amount is required");
-            if (focusView == null) focusView = etEnergyKwh;
+            if (focusView == null)
+                focusView = etEnergyKwh;
             cancel = true;
         } else {
             try {
                 energyKwh = Double.parseDouble(energyStr);
                 if (energyKwh <= 0) {
                     tilEnergyKwh.setError("Energy must be greater than 0 kWh");
-                    if (focusView == null) focusView = etEnergyKwh;
+                    if (focusView == null)
+                        focusView = etEnergyKwh;
                     cancel = true;
-                } else if (selectedNode != null && selectedNode.getCapacityKwh() > 0 && energyKwh > selectedNode.getCapacityKwh()) {
-                    tilEnergyKwh.setError("Energy cannot exceed node capacity (" + selectedNode.getCapacityKwh() + " kWh)");
-                    if (focusView == null) focusView = etEnergyKwh;
+                } else if (selectedNode != null && selectedNode.getCapacityKwh() > 0
+                        && energyKwh > selectedNode.getCapacityKwh()) {
+                    tilEnergyKwh
+                            .setError("Energy cannot exceed node capacity (" + selectedNode.getCapacityKwh() + " kWh)");
+                    if (focusView == null)
+                        focusView = etEnergyKwh;
                     cancel = true;
                 }
             } catch (NumberFormatException e) {
                 tilEnergyKwh.setError("Invalid energy number format");
-                if (focusView == null) focusView = etEnergyKwh;
+                if (focusView == null)
+                    focusView = etEnergyKwh;
                 cancel = true;
             }
         }
@@ -361,7 +425,7 @@ public class CreateBookingActivity extends AppCompatActivity {
         apiService.createBooking(request).enqueue(new Callback<BookingResponse>() {
             @Override
             public void onResponse(@NonNull Call<BookingResponse> call,
-                                   @NonNull Response<BookingResponse> response) {
+                    @NonNull Response<BookingResponse> response) {
                 setLoading(false);
 
                 if (response.isSuccessful() && response.body() != null) {
@@ -387,11 +451,16 @@ public class CreateBookingActivity extends AppCompatActivity {
                     Intent summaryIntent = new Intent(CreateBookingActivity.this, BookingSummaryActivity.class);
                     summaryIntent.putExtra(Constants.EXTRA_BOOKING_ID, booking.getBookingId());
                     summaryIntent.putExtra(Constants.EXTRA_ACTION_TYPE, "CREATE");
-                    summaryIntent.putExtra("node_name", booking.getNodeName() != null ? booking.getNodeName() : selectedNode.getNodeName());
-                    summaryIntent.putExtra("slot_date", booking.getSlotDate() != null ? booking.getSlotDate() : apiDateStr);
-                    summaryIntent.putExtra("slot_time", booking.getSlotTime() != null ? booking.getSlotTime() : slotTime);
-                    summaryIntent.putExtra("energy_kwh", booking.getEnergyKwh() > 0 ? booking.getEnergyKwh() : energyKwh);
-                    summaryIntent.putExtra("status", booking.getStatus() != null ? booking.getStatus() : Constants.STATUS_PENDING);
+                    summaryIntent.putExtra("node_name",
+                            booking.getNodeName() != null ? booking.getNodeName() : selectedNode.getNodeName());
+                    summaryIntent.putExtra("slot_date",
+                            booking.getSlotDate() != null ? booking.getSlotDate() : apiDateStr);
+                    summaryIntent.putExtra("slot_time",
+                            booking.getSlotTime() != null ? booking.getSlotTime() : slotTime);
+                    summaryIntent.putExtra("energy_kwh",
+                            booking.getEnergyKwh() > 0 ? booking.getEnergyKwh() : energyKwh);
+                    summaryIntent.putExtra("status",
+                            booking.getStatus() != null ? booking.getStatus() : Constants.STATUS_PENDING);
                     summaryIntent.putExtra("message", booking.getMessage());
                     summaryIntent.putExtra("qr_token", booking.getQrToken());
 

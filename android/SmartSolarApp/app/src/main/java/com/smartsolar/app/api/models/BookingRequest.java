@@ -1,10 +1,3 @@
-/*
- * Smart Solar Microgrid Trading System
- * BookingRequest.java
- *
- * Member 2 - Native Android Prosumer Application
- * DTO for creating or updating energy slot reservations.
- */
 package com.smartsolar.app.api.models;
 
 import com.google.gson.annotations.SerializedName;
