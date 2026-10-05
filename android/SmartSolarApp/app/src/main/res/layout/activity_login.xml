@@ -94,7 +94,7 @@
                     android:layout_marginBottom="20dp"
                     android:text="@string/auth_login_subtitle" />
 
-                <!-- NIC / Email Input Field -->
+                <!-- NIC Input Field -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilNic"
                     style="@style/Widget.SmartSolar.TextInputLayout"
