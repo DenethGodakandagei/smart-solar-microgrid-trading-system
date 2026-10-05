@@ -27,7 +27,7 @@ public final class Constants {
      * For Android Emulator use 10.0.2.2 to reach localhost.
      * For physical device use the actual server IP address.
      */
-    public static final String BASE_URL = "http://10.0.2.2:5000/api/";
+    public static final String BASE_URL = "http://10.0.2.2:5055/api/";
 
     /** Connection timeout in seconds for API requests. */
     public static final int CONNECT_TIMEOUT = 30;

@@ -1,7 +1,6 @@
 package com.smartsolar.app.account;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -83,7 +82,9 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         userNic = sessionManager.getUserNic();
-        userDao = SmartSolarApplication.getInstance().getUserDao();
+        userDao = SmartSolarApplication.getInstance() != null
+                ? SmartSolarApplication.getInstance().getUserDao()
+                : null;
 
         initViews();
         setupLauncher();
@@ -142,15 +143,15 @@ public class ProfileActivity extends AppCompatActivity {
         btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
             if (currentProfile != null) {
-                intent.putExtra(EXTRA_PROFILE_NIC, currentProfile.getNic());
-                intent.putExtra(EXTRA_PROFILE_NAME, currentProfile.getFullName());
-                intent.putExtra(EXTRA_PROFILE_EMAIL, currentProfile.getEmail());
-                intent.putExtra(EXTRA_PROFILE_PHONE, currentProfile.getPhone());
-                intent.putExtra(EXTRA_PROFILE_ADDRESS, currentProfile.getAddress());
+                intent.putExtra(EXTRA_PROFILE_NIC, getSafeString(currentProfile.getNic(), userNic));
+                intent.putExtra(EXTRA_PROFILE_NAME, getSafeString(currentProfile.getFullName(), sessionManager.getUserName()));
+                intent.putExtra(EXTRA_PROFILE_EMAIL, getSafeString(currentProfile.getEmail(), sessionManager.getUserEmail()));
+                intent.putExtra(EXTRA_PROFILE_PHONE, getSafeString(currentProfile.getPhone(), ""));
+                intent.putExtra(EXTRA_PROFILE_ADDRESS, getSafeString(currentProfile.getAddress(), ""));
             } else {
-                intent.putExtra(EXTRA_PROFILE_NIC, userNic);
-                intent.putExtra(EXTRA_PROFILE_NAME, sessionManager.getUserName());
-                intent.putExtra(EXTRA_PROFILE_EMAIL, sessionManager.getUserEmail());
+                intent.putExtra(EXTRA_PROFILE_NIC, userNic != null ? userNic : "");
+                intent.putExtra(EXTRA_PROFILE_NAME, getSafeString(sessionManager.getUserName(), ""));
+                intent.putExtra(EXTRA_PROFILE_EMAIL, getSafeString(sessionManager.getUserEmail(), ""));
             }
             editProfileLauncher.launch(intent);
         });
@@ -167,23 +168,27 @@ public class ProfileActivity extends AppCompatActivity {
      * Loads locally cached profile data from SQLite.
      */
     private void loadCachedProfile() {
-        if (userDao != null) {
+        if (userDao != null && userNic != null) {
             ProsumerProfile cached = userDao.getProsumerProfile(userNic);
             if (cached != null) {
                 currentProfile = cached;
                 populateProfileUI(cached);
-            } else {
-                // Populate what we have in SessionManager
-                tvProfileNic.setText(getString(R.string.profile_label_nic) + ": " + userNic);
-                tvProfileName.setText(sessionManager.getUserName());
-                tvProfileEmail.setText(sessionManager.getUserEmail());
-                tvAvatarInitials.setText(getInitials(sessionManager.getUserName()));
+                return;
             }
         }
-        // Populate role and NIC details from session
-        String role = sessionManager.getUserRole();
-        tvProfileRole.setText(role != null && !role.isEmpty() ? role : "-");
-        tvProfileNicDetail.setText(userNic != null && !userNic.isEmpty() ? userNic : "-");
+
+        // Fallback to SessionManager data if cache is unavailable
+        String name = getSafeString(sessionManager.getUserName(), "User Name");
+        String email = getSafeString(sessionManager.getUserEmail(), "Not provided");
+        String nic = getSafeString(userNic, "Not provided");
+        String role = getSafeString(sessionManager.getUserRole(), "Prosumer");
+
+        tvProfileNic.setText(getString(R.string.profile_label_nic) + ": " + nic);
+        tvProfileName.setText(name);
+        tvProfileEmail.setText(email);
+        tvProfileRole.setText(role);
+        tvProfileNicDetail.setText(nic);
+        tvAvatarInitials.setText(getInitials(name));
     }
 
     /**
@@ -192,6 +197,12 @@ public class ProfileActivity extends AppCompatActivity {
      * @param isSwipeRefresh true if triggered by pull-to-refresh.
      */
     private void fetchProfileFromApi(boolean isSwipeRefresh) {
+        if (userNic == null || userNic.isEmpty()) {
+            if (isSwipeRefresh) swipeRefreshLayout.setRefreshing(false);
+            showSnackbar("Invalid NIC session");
+            return;
+        }
+
         if (!NetworkUtils.isNetworkAvailable(this)) {
             if (isSwipeRefresh) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -210,7 +221,7 @@ public class ProfileActivity extends AppCompatActivity {
         apiService.getProfile(userNic).enqueue(new Callback<ProsumerProfile>() {
             @Override
             public void onResponse(@NonNull Call<ProsumerProfile> call,
-                    @NonNull Response<ProsumerProfile> response) {
+                                   @NonNull Response<ProsumerProfile> response) {
                 progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
 
@@ -223,8 +234,9 @@ public class ProfileActivity extends AppCompatActivity {
                         userDao.saveSession(currentProfile, sessionManager.getAuthToken());
                     }
                     sessionManager.updateUserProfile(
-                            currentProfile.getFullName(),
-                            currentProfile.getEmail());
+                            getSafeString(currentProfile.getFullName(), sessionManager.getUserName()),
+                            getSafeString(currentProfile.getEmail(), sessionManager.getUserEmail())
+                    );
                 } else if (response.code() == 401) {
                     showSnackbar(getString(R.string.error_unauthorized));
                     redirectToLogin();
@@ -243,43 +255,41 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Populates UI controls with profile fields.
+     * Populates UI controls with profile fields and handles null values gracefully.
      */
     private void populateProfileUI(ProsumerProfile profile) {
-        if (profile == null)
-            return;
+        if (profile == null) return;
 
-        tvProfileName.setText(profile.getFullName() != null ? profile.getFullName() : "-");
-        tvProfileNic.setText(getString(R.string.profile_label_nic) + ": " + profile.getNic());
-        tvProfileEmail.setText(profile.getEmail() != null ? profile.getEmail() : "-");
-        tvProfilePhone.setText(
-                profile.getPhone() != null && !profile.getPhone().isEmpty() ? profile.getPhone() : "Not provided");
-        tvProfileAddress.setText(profile.getAddress() != null && !profile.getAddress().isEmpty() ? profile.getAddress()
-                : "Not provided");
+        String name = getSafeString(profile.getFullName(), sessionManager.getUserName());
+        String nic = getSafeString(profile.getNic(), userNic);
+        String email = getSafeString(profile.getEmail(), sessionManager.getUserEmail());
+        String phone = getSafeString(profile.getPhone(), "Not provided");
+        String address = getSafeString(profile.getAddress(), "Not provided");
+        String role = getSafeString(profile.getRole(), sessionManager.getUserRole());
+        String status = getSafeString(profile.getStatus(), "Active");
 
-        // Role from profile API or session fallback
-        String role = profile.getRole() != null && !profile.getRole().isEmpty()
-                ? profile.getRole()
-                : sessionManager.getUserRole();
-        tvProfileRole.setText(role != null && !role.isEmpty() ? role : "-");
+        tvProfileName.setText(!name.isEmpty() ? name : "User Name");
+        tvProfileNic.setText(getString(R.string.profile_label_nic) + ": " + (!nic.isEmpty() ? nic : "Not provided"));
+        tvProfileEmail.setText(!email.isEmpty() ? email : "Not provided");
+        tvProfilePhone.setText(!phone.isEmpty() ? phone : "Not provided");
+        tvProfileAddress.setText(!address.isEmpty() ? address : "Not provided");
 
-        // NIC detail
-        tvProfileNicDetail.setText(profile.getNic() != null && !profile.getNic().isEmpty() ? profile.getNic() : "-");
+        tvProfileRole.setText(!role.isEmpty() ? role : "Prosumer");
+        tvProfileNicDetail.setText(!nic.isEmpty() ? nic : "Not provided");
 
         // Format member since date
-        if (profile.getCreatedAt() != null && !profile.getCreatedAt().isEmpty()) {
+        if (profile.getCreatedAt() != null && !profile.getCreatedAt().trim().isEmpty()) {
             tvProfileMemberSince.setText(DateTimeUtils.formatApiDateForDisplay(profile.getCreatedAt()));
         } else {
-            tvProfileMemberSince.setText("-");
+            tvProfileMemberSince.setText("Not provided");
         }
 
-        // Account status
-        String status = profile.getStatus() != null ? profile.getStatus() : "Active";
+        // Account status styling
         tvProfileStatus.setText(status);
         applyStatusBadgeStyle(status);
 
         // Avatar initials
-        tvAvatarInitials.setText(getInitials(profile.getFullName()));
+        tvAvatarInitials.setText(getInitials(name));
     }
 
     /**
@@ -303,13 +313,23 @@ public class ProfileActivity extends AppCompatActivity {
      */
     private String getInitials(String name) {
         if (name == null || name.trim().isEmpty()) {
-            return "SS";
+            return "NA";
         }
         String[] parts = name.trim().split("\\s+");
         if (parts.length == 1) {
             return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
         }
         return (parts[0].substring(0, 1) + parts[parts.length - 1].substring(0, 1)).toUpperCase();
+    }
+
+    /**
+     * Helper to retrieve string value or fallback default if null/empty.
+     */
+    private String getSafeString(String value, String fallback) {
+        if (value != null && !value.trim().isEmpty()) {
+            return value.trim();
+        }
+        return fallback != null ? fallback.trim() : "";
     }
 
     /**

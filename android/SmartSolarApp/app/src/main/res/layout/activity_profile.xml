@@ -250,8 +250,11 @@
                     android:id="@+id/btnEditProfile"
                     style="@style/Widget.SmartSolar.Button.Primary"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/btn_height"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/btn_height"
                     android:layout_marginBottom="12dp"
+                    app:backgroundInsetTop="0dp"
+                    app:backgroundInsetBottom="0dp"
                     android:text="@string/profile_btn_edit" />
 
                 <!-- Deactivate Account Button -->
@@ -259,8 +262,11 @@
                     android:id="@+id/btnDeactivateAccount"
                     style="@style/Widget.SmartSolar.Button.Danger"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/btn_height"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/btn_height"
                     android:layout_marginBottom="12dp"
+                    app:backgroundInsetTop="0dp"
+                    app:backgroundInsetBottom="0dp"
                     android:text="@string/profile_btn_deactivate" />
 
                 <!-- Logout Button -->
@@ -268,7 +274,10 @@
                     android:id="@+id/btnLogout"
                     style="@style/Widget.SmartSolar.Button.Secondary"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/btn_height"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/btn_height"
+                    app:backgroundInsetTop="0dp"
+                    app:backgroundInsetBottom="0dp"
                     android:text="@string/action_logout" />
 
             </LinearLayout>
