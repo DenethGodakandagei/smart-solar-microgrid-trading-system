@@ -16,7 +16,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class BookingResponse {
 
-    @SerializedName("bookingId")
+    @SerializedName(value = "bookingId", alternate = {"id"})
     private String bookingId;
 
     @SerializedName("prosumerNic")
@@ -86,7 +86,7 @@ public class BookingResponse {
     }
 
     public String getNodeName() {
-        return nodeName;
+        return (nodeName != null && !nodeName.isEmpty()) ? nodeName : nodeId;
     }
 
     public void setNodeName(String nodeName) {

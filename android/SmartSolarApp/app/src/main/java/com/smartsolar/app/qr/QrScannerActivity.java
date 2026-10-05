@@ -1,12 +1,20 @@
-/*
- * Smart Solar Microgrid Trading System
- * QrScannerActivity.java
- *
- * Member 2 - Native Android Prosumer Application
- * Camera viewfinder activity using ZXing Embedded to scan and decode
- * prosumer transaction QR codes for grid operators.
- */
-package com.smartsolar.app.qr;
+ /*
+         * Smart Solar Microgrid Trading System
+         * QrScannerActivity.java
+         *
+         * Member 4 - Grid Operator App + Integration
+         *
+         * Purpose:
+         * Provides a native Android QR scanner for Grid Operators.
+         *
+         * Responsibilities:
+         * - Request camera permission.
+         * - Scan prosumer transaction QR codes.
+         * - Support flashlight control.
+         * - Provide manual transaction entry when scanning is unavailable.
+         * - Pass the scanned transaction data to the verification screen.
+         */
+ package com.smartsolar.app.qr;
 
 import android.Manifest;
 import android.content.Intent;
@@ -36,8 +44,10 @@ import com.smartsolar.app.utils.Constants;
 import java.util.List;
 
 /**
- * Camera QR scanner for grid operators.
- * Scans prosumer transaction QR tokens and navigates to VerifyTransactionActivity.
+ * QR scanner activity used by Grid Operators.
+ *
+ * The scanned QR content is passed to VerifyTransactionActivity,
+ * where the transaction is verified against the central Web API.
  */
 public class QrScannerActivity extends AppCompatActivity {
 
@@ -53,6 +63,7 @@ public class QrScannerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_qr_scanner);
 
         initViews();
@@ -60,114 +71,356 @@ public class QrScannerActivity extends AppCompatActivity {
         checkCameraPermission();
     }
 
+    /**
+     * Connect the Java variables with the QR scanner
+     * views defined in activity_qr_scanner.xml.
+     */
     private void initViews() {
-        barcodeScannerView = findViewById(R.id.barcodeScannerView);
-        btnScannerBack = findViewById(R.id.btnScannerBack);
-        btnToggleFlash = findViewById(R.id.btnToggleFlash);
-        btnManualEntry = findViewById(R.id.btnManualEntry);
-        pbScanning = findViewById(R.id.pbScanning);
+
+        barcodeScannerView =
+                findViewById(R.id.barcodeScannerView);
+
+        btnScannerBack =
+                findViewById(R.id.btnScannerBack);
+
+        btnToggleFlash =
+                findViewById(R.id.btnToggleFlash);
+
+        btnManualEntry =
+                findViewById(R.id.btnManualEntry);
+
+        pbScanning =
+                findViewById(R.id.pbScanning);
     }
 
+    /**
+     * Configure QR scanner controls.
+     */
     private void setupListeners() {
-        btnScannerBack.setOnClickListener(v -> finish());
 
-        btnToggleFlash.setOnClickListener(v -> toggleFlashlight());
+        /*
+         * Close the scanner and return to the previous screen.
+         */
+        btnScannerBack.setOnClickListener(
+                v -> finish()
+        );
 
-        btnManualEntry.setOnClickListener(v -> showManualEntryDialog());
+        /*
+         * Turn the camera flashlight on or off.
+         */
+        btnToggleFlash.setOnClickListener(
+                v -> toggleFlashlight()
+        );
+
+        /*
+         * Allow the operator to enter a booking ID
+         * or QR token manually.
+         */
+        btnManualEntry.setOnClickListener(
+                v -> showManualEntryDialog()
+        );
     }
 
+    /**
+     * Check whether the application has permission to
+     * use the device camera.
+     */
     private void checkCameraPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+        ) != PackageManager.PERMISSION_GRANTED) {
+
             ActivityCompat.requestPermissions(
                     this,
                     new String[]{Manifest.permission.CAMERA},
                     Constants.REQUEST_CAMERA_PERMISSION
             );
+
         } else {
+
             startScanning();
         }
     }
 
+    /**
+     * Handle the result of the camera permission request.
+     */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Constants.REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults
+    ) {
+
+        super.onRequestPermissionsResult(
+                requestCode,
+                permissions,
+                grantResults
+        );
+
+        if (requestCode ==
+                Constants.REQUEST_CAMERA_PERMISSION) {
+
+            if (grantResults.length > 0
+                    && grantResults[0]
+                    == PackageManager.PERMISSION_GRANTED) {
+
                 startScanning();
+
             } else {
-                Toast.makeText(this, R.string.map_error_permission, Toast.LENGTH_LONG).show();
-                // If permission denied, open manual entry dialog
+
+                Toast.makeText(
+                        this,
+                        R.string.map_error_permission,
+                        Toast.LENGTH_LONG
+                ).show();
+
+                /*
+                 * Manual verification is provided as a fallback
+                 * when camera permission is unavailable.
+                 */
                 showManualEntryDialog();
             }
         }
     }
 
+    /**
+     * Start listening for a single QR/barcode result.
+     */
     private void startScanning() {
-        barcodeScannerView.decodeSingle(new BarcodeCallback() {
-            @Override
-            public void barcodeResult(BarcodeResult result) {
-                if (result != null && result.getText() != null && !isProcessingScan) {
-                    isProcessingScan = true;
-                    pbScanning.setVisibility(View.VISIBLE);
-                    handleScannedData(result.getText());
-                }
-            }
 
-            @Override
-            public void possibleResultPoints(List<ResultPoint> resultPoints) {}
-        });
+        if (barcodeScannerView == null) {
+            return;
+        }
+
+        isProcessingScan = false;
+
+        barcodeScannerView.decodeSingle(
+                new BarcodeCallback() {
+
+                    /**
+                     * Handle a successfully decoded QR code.
+                     */
+                    @Override
+                    public void barcodeResult(
+                            BarcodeResult result
+                    ) {
+
+                        if (result == null) {
+                            return;
+                        }
+
+                        String scannedText =
+                                result.getText();
+
+                        if (scannedText == null
+                                || scannedText.trim().isEmpty()) {
+                            return;
+                        }
+
+                        /*
+                         * Prevent the same QR code from opening
+                         * the verification screen multiple times.
+                         */
+                        if (isProcessingScan) {
+                            return;
+                        }
+
+                        isProcessingScan = true;
+
+                        if (pbScanning != null) {
+                            pbScanning.setVisibility(
+                                    View.VISIBLE
+                            );
+                        }
+
+                        handleScannedData(
+                                scannedText.trim()
+                        );
+                    }
+
+                    /**
+                     * Required ZXing callback.
+                     * Result points are not required by this application.
+                     */
+                    @Override
+                    public void possibleResultPoints(
+                            List<ResultPoint> resultPoints
+                    ) {
+                        // No additional processing required.
+                    }
+                }
+        );
     }
 
+    /**
+     * Pass the scanned QR transaction data to the
+     * server verification screen.
+     */
     private void handleScannedData(String qrRawText) {
-        Intent verifyIntent = new Intent(this, VerifyTransactionActivity.class);
-        verifyIntent.putExtra(Constants.EXTRA_QR_DATA, qrRawText);
+
+        if (qrRawText == null
+                || qrRawText.trim().isEmpty()) {
+
+            Toast.makeText(
+                    this,
+                    "Invalid QR data",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            isProcessingScan = false;
+
+            if (pbScanning != null) {
+                pbScanning.setVisibility(View.GONE);
+            }
+
+            return;
+        }
+
+        /*
+         * Stop the camera before moving to the
+         * transaction verification screen.
+         */
+        if (barcodeScannerView != null) {
+            barcodeScannerView.pause();
+        }
+
+        Intent verifyIntent = new Intent(
+                this,
+                VerifyTransactionActivity.class
+        );
+
+        verifyIntent.putExtra(
+                Constants.EXTRA_QR_DATA,
+                qrRawText.trim()
+        );
+
         startActivity(verifyIntent);
+
         finish();
     }
 
+    /**
+     * Toggle the camera flashlight.
+     */
     private void toggleFlashlight() {
+
+        if (barcodeScannerView == null) {
+            return;
+        }
+
         if (isFlashOn) {
+
             barcodeScannerView.setTorchOff();
             isFlashOn = false;
+
         } else {
+
             barcodeScannerView.setTorchOn();
             isFlashOn = true;
         }
     }
 
+    /**
+     * Display a manual verification dialog when the operator
+     * cannot scan a QR code.
+     */
     private void showManualEntryDialog() {
+
         EditText input = new EditText(this);
-        input.setHint("Enter Booking ID or QR Token");
-        input.setPadding(40, 30, 40, 30);
+
+        input.setHint(
+                "Enter Booking ID or QR Token"
+        );
+
+        input.setPadding(
+                40,
+                30,
+                40,
+                30
+        );
 
         new MaterialAlertDialogBuilder(this)
                 .setTitle("Manual Verification Entry")
-                .setMessage("Enter the prosumer booking reference or scan token:")
+                .setMessage(
+                        "Enter the prosumer booking reference or scan token:"
+                )
                 .setView(input)
-                .setPositiveButton("Verify", (dialog, which) -> {
-                    String manualText = input.getText().toString().trim();
-                    if (!manualText.isEmpty()) {
-                        handleScannedData(manualText);
-                    } else {
-                        Toast.makeText(QrScannerActivity.this, "Input cannot be empty", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(
+                        "Verify",
+                        (dialog, which) -> {
+
+                            String manualText =
+                                    input.getText()
+                                            .toString()
+                                            .trim();
+
+                            if (!manualText.isEmpty()) {
+
+                                handleScannedData(
+                                        manualText
+                                );
+
+                            } else {
+
+                                Toast.makeText(
+                                        QrScannerActivity.this,
+                                        "Input cannot be empty",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            }
+                        }
+                )
+                .setNegativeButton(
+                        "Cancel",
+                        null
+                )
                 .show();
     }
 
+    /**
+     * Resume the camera scanner when the activity
+     * becomes visible.
+     */
     @Override
     protected void onResume() {
+
         super.onResume();
-        barcodeScannerView.resume();
+
+        if (barcodeScannerView != null) {
+            barcodeScannerView.resume();
+        }
+
         isProcessingScan = false;
     }
 
+    /**
+     * Pause the camera scanner when the activity
+     * is no longer visible.
+     */
     @Override
     protected void onPause() {
+
+        if (barcodeScannerView != null) {
+            barcodeScannerView.pause();
+        }
+
         super.onPause();
-        barcodeScannerView.pause();
+    }
+
+    /**
+     * Turn off the flashlight when the activity is destroyed.
+     */
+    @Override
+    protected void onDestroy() {
+
+        if (barcodeScannerView != null && isFlashOn) {
+            barcodeScannerView.setTorchOff();
+            isFlashOn = false;
+        }
+
+        super.onDestroy();
     }
 }

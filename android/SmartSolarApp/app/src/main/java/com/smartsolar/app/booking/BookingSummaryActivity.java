@@ -1,11 +1,3 @@
-/*
- * Smart Solar Microgrid Trading System
- * BookingSummaryActivity.java
- *
- * Member 2 - Native Android Prosumer Application
- * Displays a comprehensive summary card after any booking action
- * (Create, Update, or Cancel) and provides quick navigation.
- */
 package com.smartsolar.app.booking;
 
 import android.content.Intent;
@@ -31,16 +23,16 @@ import com.smartsolar.app.utils.Constants;
 import com.smartsolar.app.utils.DateTimeUtils;
 import com.smartsolar.app.utils.NetworkUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Summary page presented after a reservation is created, modified, or cancelled.
- * Shows confirmation ID, node, timing, energy kWh, status badge, and next actions.
- */
 public class BookingSummaryActivity extends AppCompatActivity {
 
     private FrameLayout flStatusIconContainer;
@@ -110,14 +102,12 @@ public class BookingSummaryActivity extends AppCompatActivity {
 
         btnViewQr.setOnClickListener(v -> {
             try {
-                // Dynamically navigate to QrGeneratorActivity
                 Class<?> qrClass = Class.forName("com.smartsolar.app.qr.QrGeneratorActivity");
                 Intent qrIntent = new Intent(this, qrClass);
                 qrIntent.putExtra(Constants.EXTRA_BOOKING_ID, bookingId);
                 qrIntent.putExtra(Constants.EXTRA_QR_DATA, qrToken != null ? qrToken : bookingId);
                 startActivity(qrIntent);
             } catch (ClassNotFoundException e) {
-                // If QR class not yet compiled, navigate to Dashboard
                 navigateToDashboard();
             }
         });
@@ -133,36 +123,68 @@ public class BookingSummaryActivity extends AppCompatActivity {
         String slotDate = intent.getStringExtra("slot_date");
         String slotTime = intent.getStringExtra("slot_time");
         double energyKwh = intent.getDoubleExtra("energy_kwh", 0.0);
-        String status = intent.getStringExtra("status");
+        String status = normalizeStatus(intent.getStringExtra("status"));
         String message = intent.getStringExtra("message");
         qrToken = intent.getStringExtra("qr_token");
 
-        // Format Date for display
-        String formattedDate = slotDate != null ? slotDate : "N/A";
-        Date parsed = DateTimeUtils.parseApiDate(slotDate);
-        if (parsed != null) {
-            formattedDate = DateTimeUtils.formatDisplayDate(parsed);
-        }
-
-        // Apply Action Type Stylings
         configureActionAppearance(actionType, status, message);
 
-        // Bind Data
-        tvSummaryBookingId.setText(bookingId != null ? bookingId : "N/A");
-        tvSummaryStatusBadge.setText(status != null ? status : Constants.STATUS_PENDING);
+        tvSummaryBookingId.setText(displayBookingId(bookingId));
+        tvSummaryStatusBadge.setText(status);
         tvSummaryNodeName.setText(nodeName != null && !nodeName.isEmpty() ? nodeName : "Microgrid Node");
-        tvSummaryDate.setText(formattedDate);
-        tvSummaryTimeSlot.setText(slotTime != null ? slotTime : "N/A");
-        tvSummaryEnergyKwh.setText(energyKwh > 0 ? (energyKwh + " kWh") : "N/A");
+        tvSummaryDate.setText(formatApiDate(slotDate));
+        tvSummaryTimeSlot.setText(slotTime != null && !slotTime.isEmpty() ? slotTime : "N/A");
+        tvSummaryEnergyKwh.setText(energyKwh > 0
+                ? String.format(Locale.getDefault(), "%.1f kWh", energyKwh) : "N/A");
         tvSummaryNic.setText(sessionManager.getUserNic());
 
-        // Update badge color
         applyBadgeColor(status);
 
-        // Fetch latest details from cache / API if some fields were omitted
-        if (nodeName == null && bookingId != null) {
+        if ((nodeName == null || nodeName.isEmpty()) && bookingId != null) {
             fetchMissingDetails();
         }
+    }
+
+    // ---------- helpers ----------
+
+    /** Turns 0/1/2/3 (old numeric enum) into words; leaves real words untouched. */
+    private String normalizeStatus(String s) {
+        if (s == null || s.trim().isEmpty()) return "Pending";
+        switch (s.trim()) {
+            case "0": return "Pending";
+            case "1": return "Confirmed";
+            case "2": return "Cancelled";
+            case "3": return "Completed";
+            default:  return s.trim();
+        }
+    }
+
+    /** Shows a short readable ID (BK-XXXXXXXX) instead of the 24-char Mongo id. */
+    private String displayBookingId(String id) {
+        if (id == null || id.isEmpty()) return "N/A";
+        if (id.length() > 8) return "BK-" + id.substring(id.length() - 8).toUpperCase(Locale.US);
+        return id;
+    }
+
+    /** Parses the server's UTC date and shows it in the phone's local time zone. */
+    private String formatApiDate(String raw) {
+        if (raw == null || raw.isEmpty()) return "N/A";
+
+        String[] patterns = {"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd'T'HH:mm:ss'Z'"};
+        for (String p : patterns) {
+            try {
+                SimpleDateFormat in = new SimpleDateFormat(p, Locale.US);
+                in.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Date d = in.parse(raw);
+                if (d != null) {
+                    return new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(d);
+                }
+            } catch (ParseException ignored) {
+            }
+        }
+
+        Date parsed = DateTimeUtils.parseApiDate(raw);
+        return parsed != null ? DateTimeUtils.formatDisplayDate(parsed) : raw;
     }
 
     private void configureActionAppearance(String action, String status, String customMessage) {
@@ -204,15 +226,15 @@ public class BookingSummaryActivity extends AppCompatActivity {
                 tvSummaryTitle.setText("Booking Summary");
                 tvSummarySubtitle.setText(customMessage != null ? customMessage : "Reservation details");
                 tvStatusIcon.setText("✓");
-                btnViewQr.setVisibility(Constants.STATUS_CANCELLED.equalsIgnoreCase(status) ? View.GONE : View.VISIBLE);
+                btnViewQr.setVisibility("Cancelled".equalsIgnoreCase(status) ? View.GONE : View.VISIBLE);
                 break;
         }
     }
 
     private void applyBadgeColor(String status) {
-        if (status == null) status = Constants.STATUS_PENDING;
+        if (status == null) status = "Pending";
 
-        if (Constants.STATUS_APPROVED.equalsIgnoreCase(status)) {
+        if (Constants.STATUS_APPROVED.equalsIgnoreCase(status) || "Confirmed".equalsIgnoreCase(status)) {
             tvSummaryStatusBadge.setTextColor(getColor(R.color.badge_approved));
         } else if (Constants.STATUS_CANCELLED.equalsIgnoreCase(status)) {
             tvSummaryStatusBadge.setTextColor(getColor(R.color.badge_cancelled));
@@ -253,15 +275,15 @@ public class BookingSummaryActivity extends AppCompatActivity {
     private void bindBookingResponse(BookingResponse b) {
         if (b == null) return;
         if (b.getNodeName() != null) tvSummaryNodeName.setText(b.getNodeName());
-        if (b.getSlotDate() != null) {
-            Date parsed = DateTimeUtils.parseApiDate(b.getSlotDate());
-            tvSummaryDate.setText(parsed != null ? DateTimeUtils.formatDisplayDate(parsed) : b.getSlotDate());
-        }
+        if (b.getSlotDate() != null) tvSummaryDate.setText(formatApiDate(b.getSlotDate()));
         if (b.getSlotTime() != null) tvSummaryTimeSlot.setText(b.getSlotTime());
-        if (b.getEnergyKwh() > 0) tvSummaryEnergyKwh.setText(b.getEnergyKwh() + " kWh");
+        if (b.getEnergyKwh() > 0) {
+            tvSummaryEnergyKwh.setText(String.format(Locale.getDefault(), "%.1f kWh", b.getEnergyKwh()));
+        }
         if (b.getStatus() != null) {
-            tvSummaryStatusBadge.setText(b.getStatus());
-            applyBadgeColor(b.getStatus());
+            String s = normalizeStatus(b.getStatus());
+            tvSummaryStatusBadge.setText(s);
+            applyBadgeColor(s);
         }
         if (b.getQrToken() != null) {
             qrToken = b.getQrToken();

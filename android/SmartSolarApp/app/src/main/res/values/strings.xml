@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Smart Solar Microgrid Trading System
-    String Resources
-
-    Member 2 - Native Android Prosumer Application
-    All user-facing strings organized by feature module.
--->
 <resources>
 
     <!-- ============================================================= -->
-    <!-- App Info                                                       -->
+    <!-- App Info                                                      -->
     <!-- ============================================================= -->
     <string name="app_name">SmartSolar</string>
     <string name="app_tagline">Solar Energy Trading Made Simple</string>
@@ -40,7 +33,7 @@
     <string name="label_no_results">No results found</string>
     <string name="label_error">Something went wrong</string>
     <string name="label_success">Success</string>
-    <string name="label_required">* Required</string>
+    <string name="label_required">Required</string>
     <string name="label_optional">Optional</string>
 
     <!-- ============================================================= -->
@@ -82,6 +75,7 @@
     <string name="profile_title">My Profile</string>
     <string name="profile_edit_title">Edit Profile</string>
     <string name="profile_label_nic">NIC</string>
+    <string name="profile_label_role">Role</string>
     <string name="profile_label_name">Full Name</string>
     <string name="profile_label_email">Email</string>
     <string name="profile_label_phone">Phone</string>
